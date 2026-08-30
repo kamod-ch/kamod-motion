@@ -1,0 +1,37 @@
+---
+title: Bundle sizes
+description: Measured entry-point bundle costs for the mini and hybrid engines.
+---
+
+Sizes are measured from the built `dist/` output with **esbuild** (`--bundle --minify --format=esm --platform=browser`). Peers (`preact`, `preact/hooks`, `motion`, `motion/mini`) stay **external** so numbers reflect library code only. Results are **gzip**-compressed with Node’s `zlib.gzipSync`.
+
+## Reproduce locally
+
+From the repository root:
+
+```bash
+pnpm --filter @kamod-ch/motion build
+pnpm --filter @kamod-ch/motion size
+```
+
+The script lives at `packages/core/scripts/measure-sizes.mjs` and prints minified and gzip byte counts per entry.
+
+## Latest measurements
+
+| Entry                            | Minified |   Gzip |
+| -------------------------------- | -------: | -----: |
+| `@kamod-ch/motion/mini`          |    102 B |   87 B |
+| `@kamod-ch/motion/value`         |   2.9 KB | 1.4 KB |
+| `@kamod-ch/motion/svg`           |   2.7 KB | 1.2 KB |
+| `@kamod-ch/motion/hybrid`        |    217 B |  155 B |
+| `@kamod-ch/motion` (root barrel) |   6.9 KB | 2.6 KB |
+
+The root barrel includes re-exports; bundlers with side-effect analysis may tree-shake unused subgraphs. The esbuild measurement warns when side-effect-free chunks are dropped — import focused entry points when you need predictable sizes.
+
+## Tree-shaking tips
+
+- Prefer `@kamod-ch/motion/motion` or `@kamod-ch/motion/presence` over the root barrel in app shells
+- Never import `@kamod-ch/motion/hybrid` from layout code — isolate hybrid usage to feature modules
+- Do not add `motion/react` — it is unused in this ecosystem
+
+See [Mini vs hybrid](/mini-vs-hybrid) for engine selection guidance.

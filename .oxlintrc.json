@@ -1,0 +1,17 @@
+{
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "ignorePatterns": [
+    "dist/**",
+    "node_modules/**",
+    "coverage/**",
+    "**/.cursor/**",
+    "**/tmp/**",
+    "**/*.tsbuildinfo",
+    "**/*.tgz",
+    "pnpm-lock.yaml"
+  ]
+}

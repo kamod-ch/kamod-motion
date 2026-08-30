@@ -1,0 +1,74 @@
+name: Deploy docs to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build docs with Pages base path
+        run: pnpm run build:pages
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+
+      - name: Verify docs artifact
+        run: |
+          if [ ! -f packages/docs/dist/index.html ]; then
+            echo "packages/docs/dist/index.html was not generated" >&2
+            if [ -d packages/docs/dist ]; then
+              find packages/docs/dist -maxdepth 3 -type f | sort >&2
+            else
+              echo "packages/docs/dist directory was not generated" >&2
+            fi
+            exit 1
+          fi
+
+      - name: SPA fallback (deep links on GitHub Pages)
+        run: cp packages/docs/dist/index.html packages/docs/dist/404.html
+
+      - name: Add .nojekyll
+        run: touch packages/docs/dist/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: packages/docs/dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

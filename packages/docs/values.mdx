@@ -1,0 +1,25 @@
+---
+title: Values
+description: Animated numbers for counters, KPIs, and tick labels.
+---
+
+import { ExampleFrame } from "./components/shared/ExampleFrame";
+import { AnimatedNumberDemo, animatedNumberDemoCode } from "./components/demos/AnimatedNumberDemo";
+
+The value module provides a lightweight rAF driver — no hybrid engine required.
+
+<ExampleFrame
+  id="animated-number"
+  title="Animated counter"
+  preview={<AnimatedNumberDemo />}
+  code={animatedNumberDemoCode}
+  badges={["@kamod-ch/motion/value"]}
+/>
+
+## API
+
+```ts
+import { useAnimateNumber, animateNumber } from "@kamod-ch/motion/value";
+```
+
+For spring-quality numeric motion, opt into `@kamod-ch/motion/hybrid/value` (`useSpring`, `useMotionValue`).

@@ -1,0 +1,39 @@
+{
+  "name": "@kamod-ch/motion-docs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "PreactPress documentation and kitchen sink for @kamod-ch/motion.",
+  "type": "module",
+  "scripts": {
+    "brand:sync": "kamod-brand-sync-docs --target public",
+    "predev": "pnpm run brand:sync",
+    "prebuild": "pnpm run brand:sync",
+    "dev": "preactpress dev",
+    "build": "preactpress build",
+    "preview": "preactpress preview",
+    "check": "preactpress check",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check ."
+  },
+  "dependencies": {
+    "@kamod-ch/brand": "^0.1.0",
+    "@kamod-ch/motion": "workspace:*",
+    "@kamod-ch/themes": "^0.2.1",
+    "@preact/signals": "^2.11.0",
+    "motion": "^13.1.1",
+    "preact": "^10.29.8"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
+    "@kamod-ch/preactpress": "^2.2.1",
+    "@playwright/test": "^1.60.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3",
+    "vite": "^8.2.1"
+  }
+}

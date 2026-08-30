@@ -1,0 +1,24 @@
+---
+title: SVG
+description: Path reveals and attribute animation for charts and icons.
+---
+
+import { ExampleFrame } from "./components/shared/ExampleFrame";
+import { SvgPathDemo, svgPathDemoCode } from "./components/demos/SvgPathDemo";
+
+SVG animations use the same mini engine with SVG-safe keyframes (`pathLength`, `stroke`, `fill`, geometry attrs).
+
+<ExampleFrame
+  id="svg-path"
+  title="Path draw"
+  preview={<SvgPathDemo />}
+  code={svgPathDemoCode}
+  badges={["@kamod-ch/motion/svg"]}
+/>
+
+## Hooks
+
+- `useAnimateSvg()` — ref-bound imperative API
+- `animateSvg()` — one-shot helper for chart integrations
+
+See `@kamod-ch/charts` for production chart path reveals built on these primitives.

@@ -1,0 +1,27 @@
+---
+title: useReducedMotion
+description: Respect prefers-reduced-motion in Preact components.
+---
+
+import { ExampleFrame } from "../components/shared/ExampleFrame";
+import { ReducedMotionDemo, reducedMotionDemoCode } from "../components/demos/ReducedMotionDemo";
+
+`useReducedMotion` reads `matchMedia("(prefers-reduced-motion: reduce)")` and integrates with `Motion`, `Presence`, and presets.
+
+<ExampleFrame
+  id="reduced-motion-demo"
+  title="Live preference"
+  preview={<ReducedMotionDemo />}
+  code={reducedMotionDemoCode}
+  badges={["@kamod-ch/motion/hooks/use-reduced-motion"]}
+/>
+
+## Policies
+
+| Policy             | Behavior             |
+| ------------------ | -------------------- |
+| `"user"` (default) | Follow OS setting    |
+| `"always"`         | Force reduced motion |
+| `"never"`          | Always animate       |
+
+Spatial presets automatically fall back to opacity-only variants when reduced motion is active.

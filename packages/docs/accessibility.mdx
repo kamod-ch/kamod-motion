@@ -1,0 +1,31 @@
+---
+title: Accessibility
+description: Motion that respects user preferences and assistive technology.
+---
+
+import { ExampleFrame } from "./components/shared/ExampleFrame";
+import { ReducedMotionDemo, reducedMotionDemoCode } from "./components/demos/ReducedMotionDemo";
+
+Accessible motion means honoring **prefers-reduced-motion**, keeping focus management predictable, and avoiding seizure-inducing flashes.
+
+<ExampleFrame
+  title="Reduced motion preview"
+  preview={<ReducedMotionDemo />}
+  code={reducedMotionDemoCode}
+/>
+
+## Checklist
+
+- Use `useReducedMotion()` or the `reducedMotion` prop on `Motion` / `Presence`
+- Prefer opacity-only fallbacks from `@kamod-ch/motion/presets` (`resolvePreset`)
+- Do not auto-play infinite spatial loops without a pause control
+- Pair enter/exit on focusable overlays with `@kamod-ch/ui` focus traps when using dialogs (outside this package)
+- Expose live regions for animated numeric content (`aria-live="polite"`)
+
+## Testing
+
+Docs are scanned with `@axe-core/playwright` in CI. Run locally:
+
+```bash
+pnpm --filter @kamod-ch/motion-docs test:e2e
+```

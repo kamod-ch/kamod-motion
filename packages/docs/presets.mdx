@@ -1,0 +1,38 @@
+---
+title: Presets
+description: Reusable fade, scale, and slide keyframe bundles.
+---
+
+import { CodePreview } from "./components/shared/CodePreview";
+import { ExampleFrame } from "./components/shared/ExampleFrame";
+import { FadeScaleDemo, fadeScaleDemoCode } from "./components/demos/FadeScaleDemo";
+
+Presets are plain data objects compatible with `Motion` and `Presence`. Import from `@kamod-ch/motion/presets`.
+
+<ExampleFrame title="Scale preset" preview={<FadeScaleDemo />} code={fadeScaleDemoCode} />
+
+## Available presets
+
+- `fade`, `scale`
+- `slideUp`, `slideDown`, `slideLeft`, `slideRight`
+- `stagger(interval, startDelay)` — delay factory for list entrances
+- `resolvePreset(preset, reducedMotion)` — pick reduced fallback
+
+<CodePreview
+  language="tsx"
+  code={`import { Motion } from "@kamod-ch/motion/motion";
+import { slideUp, resolvePreset } from "@kamod-ch/motion/presets";
+import { useReducedMotion } from "@kamod-ch/motion/hooks/use-reduced-motion";
+
+const reduced = useReducedMotion();
+const preset = resolvePreset(slideUp, reduced);
+
+<Motion
+  initial={preset.initial}
+  animate={preset.animate}
+  exit={preset.exit}
+  transition={preset.transition}
+/>`}
+/>
+
+Import `@kamod-ch/motion/presets/tokens.css` for shared duration and easing CSS variables.

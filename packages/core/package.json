@@ -1,0 +1,117 @@
+{
+  "name": "@kamod-ch/motion",
+  "version": "0.1.0",
+  "description": "Preact-first animation primitives built on Vanilla Motion (mini engine by default).",
+  "keywords": [
+    "animation",
+    "motion",
+    "preact",
+    "typescript",
+    "vanilla-motion"
+  ],
+  "homepage": "https://github.com/kamod-ch/kamod-motion#readme",
+  "bugs": {
+    "url": "https://github.com/kamod-ch/kamod-motion/issues"
+  },
+  "license": "MIT",
+  "author": "Klaus Zahiragic <watzak>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamod-ch/kamod-motion.git",
+    "directory": "packages/core"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./mini": {
+      "types": "./dist/mini/index.d.ts",
+      "import": "./dist/mini/index.js"
+    },
+    "./hooks/use-reduced-motion": {
+      "types": "./dist/hooks/use-reduced-motion/index.d.ts",
+      "import": "./dist/hooks/use-reduced-motion/index.js"
+    },
+    "./hooks/use-animate": {
+      "types": "./dist/hooks/use-animate/index.d.ts",
+      "import": "./dist/hooks/use-animate/index.js"
+    },
+    "./motion": {
+      "types": "./dist/motion/index.d.ts",
+      "import": "./dist/motion/index.js"
+    },
+    "./presence": {
+      "types": "./dist/presence/index.d.ts",
+      "import": "./dist/presence/index.js"
+    },
+    "./presets": {
+      "types": "./dist/presets/index.d.ts",
+      "import": "./dist/presets/index.js"
+    },
+    "./presets/tokens.css": {
+      "types": "./dist/presets/tokens.css.d.ts",
+      "default": "./dist/presets/tokens.css"
+    },
+    "./value": {
+      "types": "./dist/value/index.d.ts",
+      "import": "./dist/value/index.js"
+    },
+    "./svg": {
+      "types": "./dist/svg/index.d.ts",
+      "import": "./dist/svg/index.js"
+    },
+    "./hybrid": {
+      "types": "./dist/hybrid/index.d.ts",
+      "import": "./dist/hybrid/index.js"
+    },
+    "./hybrid/value": {
+      "types": "./dist/hybrid/value/index.d.ts",
+      "import": "./dist/hybrid/value/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup && cp src/presets/tokens.css src/presets/tokens.css.d.ts dist/presets/",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "publint": "publint",
+    "attw": "attw --pack .",
+    "size": "node scripts/measure-sizes.mjs",
+    "qa:import-graph": "node scripts/qa-import-graph.mjs",
+    "qa:tarball": "node scripts/qa-tarball-consumer.mjs",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@testing-library/preact": "^3.2.4",
+    "@types/node": "^25.9.2",
+    "jsdom": "^29.1.1",
+    "motion": "^13.1.1",
+    "preact": "^10.29.8",
+    "preact-render-to-string": "^6.6.4",
+    "publint": "^0.3.24",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.11"
+  },
+  "peerDependencies": {
+    "motion": "^13.1.1",
+    "preact": "^10.29.8"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

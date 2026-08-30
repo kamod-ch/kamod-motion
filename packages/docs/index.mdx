@@ -1,0 +1,35 @@
+---
+title: Introduction
+description: Preact-first animation primitives built on Vanilla Motion — mini engine by default.
+---
+
+import { ExampleFrame } from "./components/shared/ExampleFrame";
+import { FadeScaleDemo, fadeScaleDemoCode } from "./components/demos/FadeScaleDemo";
+
+**@kamod-ch/motion** wraps [Vanilla Motion](https://motion.dev) (`motion` package) for Preact apps. The default export map uses the **mini WAAPI engine** (`motion/mini`) for overlays, presence transitions, SVG reveals, and numeric counters — without pulling React bindings or the full hybrid runtime.
+
+## Why not motion/react?
+
+This library is **Preact-first**. We intentionally do **not** ship or document `motion/react`, `react`, or `react-dom`. React Motion components are out of scope; use `@kamod-ch/motion/motion`, `@kamod-ch/motion/presence`, and the published hooks instead. See [Mini vs hybrid](/mini-vs-hybrid) for engine boundaries.
+
+## What you get
+
+- **`Motion`** — declarative enter/update/exit on DOM and SVG elements
+- **`Presence`** — mount/unmount orchestration for overlays and toasts
+- **Presets** — fade, scale, and slide tokens aligned with Kamod UI motion language
+- **`useReducedMotion`** — respects `prefers-reduced-motion`
+- **Hybrid opt-in** — `@kamod-ch/motion/hybrid` for `MotionValue`, springs, and stagger factories when you need them
+
+<ExampleFrame
+  title="Quick preview"
+  description="Fade and scale using the mini engine and published preset tokens."
+  preview={<FadeScaleDemo />}
+  code={fadeScaleDemoCode}
+  badges={["mini", "Motion", "presets"]}
+/>
+
+## Next steps
+
+- [Install @kamod-ch/motion](/getting-started/)
+- Compare [mini vs hybrid](/mini-vs-hybrid) engines
+- Try the [playground](/playground/)

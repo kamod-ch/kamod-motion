@@ -1,0 +1,37 @@
+---
+title: Motion
+description: Declarative animation component for Preact DOM and SVG elements.
+---
+
+import { ExampleFrame } from "./components/shared/ExampleFrame";
+import { FadeScaleDemo, fadeScaleDemoCode } from "./components/demos/FadeScaleDemo";
+import { StaggerListDemo, staggerListDemoCode } from "./components/demos/StaggerListDemo";
+
+`Motion` is a polymorphic Preact component that drives the mini engine via `initial`, `animate`, and `exit` keyframes.
+
+<ExampleFrame
+  id="motion-fade-scale"
+  title="Fade and scale"
+  preview={<FadeScaleDemo />}
+  code={fadeScaleDemoCode}
+  badges={["@kamod-ch/motion/motion"]}
+/>
+
+## Props
+
+| Prop            | Type                               | Description                      |
+| --------------- | ---------------------------------- | -------------------------------- |
+| `as`            | `"div" \| "button" \| "span" \| …` | Host element (limited set)       |
+| `initial`       | keyframes \| `false`               | Starting state                   |
+| `animate`       | keyframes \| `false`               | Target state while present       |
+| `exit`          | keyframes \| `false`               | Exit state (requires `Presence`) |
+| `transition`    | Motion transition                  | Duration, ease, delay            |
+| `reducedMotion` | `"user" \| "always" \| "never"`    | Override reduced-motion policy   |
+
+Pair with `@kamod-ch/motion/presets` for Kamod-standard motion language.
+
+## Staggered lists
+
+<ExampleFrame title="Staggered entrance" preview={<StaggerListDemo />} code={staggerListDemoCode} />
+
+See also [Presence](/presence) for mount/unmount orchestration.

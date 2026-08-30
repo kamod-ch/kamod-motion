@@ -1,0 +1,68 @@
+---
+title: Getting started
+description: Install @kamod-ch/motion and animate your first Preact component.
+---
+
+import { CodePreview } from "../components/shared/CodePreview";
+import { CopyButton } from "../components/shared/CopyButton";
+import { ExampleFrame } from "../components/shared/ExampleFrame";
+import { FadeScaleDemo, fadeScaleDemoCode } from "../components/demos/FadeScaleDemo";
+
+## Installation
+
+Install the package and peer dependencies:
+
+<div class="not-prose my-4 flex flex-col gap-3 rounded-xl border border-border bg-muted/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+  <code class="font-mono text-sm text-brand">pnpm add @kamod-ch/motion preact motion</code>
+  <CopyButton value="pnpm add @kamod-ch/motion preact motion" />
+</div>
+
+Import motion duration tokens once in your app entry (optional but recommended):
+
+```ts
+import "@kamod-ch/motion/presets/tokens.css";
+```
+
+`preact` and `motion` are peer dependencies. **React and motion/react are not supported.**
+
+## Quick start
+
+Use published entry points — never deep-import from package source:
+
+<ExampleFrame title="First animation" preview={<FadeScaleDemo />} code={fadeScaleDemoCode} />
+
+<CodePreview
+  title="Minimal app wiring"
+  language="tsx"
+  code={`import { render } from "preact";
+import { Motion } from "@kamod-ch/motion/motion";
+import { fade } from "@kamod-ch/motion/presets";
+import "@kamod-ch/motion/presets/tokens.css";
+
+render(
+
+  <Motion initial={fade.initial} animate={fade.animate} transition={fade.transition}>
+    Hello motion
+  </Motion>,
+  document.getElementById("app")!,
+);`}
+/>
+
+## Entry points
+
+| Import                      | Purpose                          |
+| --------------------------- | -------------------------------- |
+| `@kamod-ch/motion`          | Mini engine re-exports (default) |
+| `@kamod-ch/motion/motion`   | `Motion` component               |
+| `@kamod-ch/motion/presence` | `Presence`, `usePresence`        |
+| `@kamod-ch/motion/presets`  | Fade, scale, slide presets       |
+| `@kamod-ch/motion/hooks/*`  | `useAnimate`, `useReducedMotion` |
+| `@kamod-ch/motion/value`    | Animated numbers                 |
+| `@kamod-ch/motion/svg`      | SVG path utilities               |
+| `@kamod-ch/motion/hybrid`   | Full Motion engine (opt-in)      |
+
+## Next steps
+
+- [Mini vs hybrid](/mini-vs-hybrid)
+- [Motion component](/motion)
+- [Accessibility](/accessibility)

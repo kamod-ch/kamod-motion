@@ -1,0 +1,27 @@
+---
+title: Presence
+description: Keep children mounted until exit animations finish.
+---
+
+import { ExampleFrame } from "./components/shared/ExampleFrame";
+import { PresenceDemo, presenceDemoCode } from "./components/demos/PresenceDemo";
+
+`Presence` coordinates enter/exit phases for overlays, toasts, and conditional panels. Child `Motion` nodes register with the presence context so unmount waits for exit animations.
+
+<ExampleFrame
+  id="presence-toast"
+  title="Toast dismiss"
+  preview={<PresenceDemo />}
+  code={presenceDemoCode}
+  badges={["@kamod-ch/motion/presence"]}
+/>
+
+## API
+
+```tsx
+<Presence show={open} onExitComplete={() => setOpen(false)}>
+  <Motion exit={fade.exit}>…</Motion>
+</Presence>
+```
+
+When `prefers-reduced-motion: reduce` is active, presence skips spatial motion and completes exits immediately — see [useReducedMotion](/hooks/use-reduced-motion).

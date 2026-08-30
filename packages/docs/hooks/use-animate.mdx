@@ -1,0 +1,35 @@
+---
+title: useAnimate
+description: Imperative mini-engine animations bound to a ref.
+---
+
+import { CodePreview } from "../components/shared/CodePreview";
+
+`useAnimate` returns `{ ref, animate }` for imperative WAAPI animations without declaring keyframes on a `Motion` component.
+
+<CodePreview
+  language="tsx"
+  code={`import { useAnimate } from "@kamod-ch/motion/hooks/use-animate";
+
+function PulseButton() {
+const { ref, animate } = useAnimate<HTMLButtonElement>();
+
+return (
+
+<button
+ref={ref}
+type="button"
+onClick={() => animate({ scale: [1, 1.05, 1] }, { duration: 0.35 })} >
+Pulse
+</button>
+);
+}`}
+/>
+
+## Options
+
+| Option       | Default  | Description                                         |
+| ------------ | -------- | --------------------------------------------------- |
+| `onConflict` | `"stop"` | Stop the active animation before starting a new one |
+
+The hook returns noop controls during SSR when no element is mounted.

@@ -1,0 +1,62 @@
+---
+title: Mini vs hybrid
+description: Choose the mini WAAPI engine by default; opt into hybrid MotionValue APIs when needed.
+---
+
+## Two engines, one package
+
+@kamod-ch/motion ships two animation runtimes from the same `motion` peer:
+
+| Engine     | Import                                                     | Bundle (gzip, approx.) | Use when                                                |
+| ---------- | ---------------------------------------------------------- | ---------------------- | ------------------------------------------------------- |
+| **Mini**   | `@kamod-ch/motion`, `@kamod-ch/motion/mini`                | ~3.1 KB                | DOM/SVG WAAPI overlays, presets, presence               |
+| **Hybrid** | `@kamod-ch/motion/hybrid`, `@kamod-ch/motion/hybrid/value` | ~22.8 KB               | `MotionValue`, springs, stagger factory, object targets |
+
+The root export map **never** imports the hybrid engine, so tree-shaking stays predictable.
+
+## motion/react is not used
+
+Vanilla Motion publishes React bindings at `motion/react`. **This repository does not use, re-export, or document them.**
+
+- No `react` or `react-dom` dependency
+- No Preact compat shims for Framer Motion components
+- Preact apps should use `@kamod-ch/motion/motion` and `@kamod-ch/motion/presence`
+
+If you need React Motion components, use upstream `motion/react` directly in a React project — not in Kamod Preact apps.
+
+## Mini engine (default)
+
+Powered by `motion/mini` (`animate`, `animateSequence`). Covers:
+
+- CSS transforms, opacity, filters
+- SVG attributes and path metrics (`pathLength`, `pathOffset`)
+- Preset-driven enter/exit on `Motion` + `Presence`
+- rAF numeric drivers in `@kamod-ch/motion/value`
+
+```ts
+import { animate } from "@kamod-ch/motion/mini";
+import { Motion } from "@kamod-ch/motion/motion";
+```
+
+## Hybrid engine (opt-in)
+
+Powered by full `motion` exports — `motionValue`, `animateValue`, `stagger`, scroll helpers, and JS-driven springs.
+
+```ts
+import { motionValue, stagger } from "@kamod-ch/motion/hybrid";
+import { useSpring } from "@kamod-ch/motion/hybrid/value";
+```
+
+Import hybrid subpaths **only** in modules that need them. Never import hybrid from shared layout shells if you want to keep bundles small.
+
+## Decision guide
+
+| Need                         | Engine                        |
+| ---------------------------- | ----------------------------- |
+| Dialog / toast enter & exit  | Mini                          |
+| Chart path reveal            | Mini (`@kamod-ch/motion/svg`) |
+| KPI counter tick             | Mini (`useAnimateNumber`)     |
+| Spring-driven drag or layout | Hybrid (future / opt-in)      |
+| `MotionValue` pipelines      | Hybrid                        |
+
+See [bundle sizes](/bundle-sizes) for measured entry-point costs.

@@ -1,0 +1,31 @@
+---
+title: SSR
+description: Server rendering and hydration safety for @kamod-ch/motion.
+---
+
+## Rules
+
+1. **Never call `animate` during SSR** — hooks and components guard with environment checks and return noop controls server-side.
+2. **Render stable markup** — `Motion` renders children immediately; animation runs in `useLayoutEffect` after hydration.
+3. **Reduced motion defaults to false** when `matchMedia` is unavailable (Node, SSR).
+
+## Safe patterns
+
+```tsx
+// OK — Motion renders static children on the server
+<Motion initial={false} animate={fade.animate}>
+  Panel
+</Motion>;
+
+// OK — useAnimate returns noop controls without a mounted ref
+const { ref, animate } = useAnimate();
+```
+
+## Unsafe patterns
+
+```tsx
+// Avoid — imperative animate in render
+animate(element, { opacity: 1 });
+```
+
+Test SSR behavior with `preact-render-to-string` in your app or rely on package vitest SSR specs in `@kamod-ch/motion`.

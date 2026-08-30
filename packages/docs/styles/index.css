@@ -1,0 +1,171 @@
+@import "tailwindcss";
+@import "@kamod-ch/themes/theme.css";
+@import "@kamod-ch/motion/presets/tokens.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+@source "../components/**/*.{ts,tsx}";
+@source "../.preactpress/theme/**/*.{ts,tsx}";
+
+:root {
+  --brand: #6366f1;
+  --brand-foreground: #0f1029;
+  --brand-hover: #4f46e5;
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-foreground);
+  --primary-accent: var(--brand-hover);
+  --ring: var(--brand);
+  --docs-header-height: 3.5rem;
+  --docs-sidebar-width: 16rem;
+  --docs-outline-width: 14rem;
+  --docs-content-max: 56rem;
+}
+
+.dark {
+  --brand: #818cf8;
+  --brand-foreground: #eef2ff;
+  --brand-hover: #a5b4fc;
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-foreground);
+  --primary-accent: var(--brand-hover);
+  --ring: var(--brand);
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-hover: var(--brand-hover);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "IBM Plex Sans", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.docs-skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 100;
+  border-radius: var(--radius, 0.5rem);
+  background: var(--brand);
+  color: var(--brand-foreground);
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+}
+
+.docs-skip-link:focus {
+  top: 1rem;
+}
+
+.docs-prose {
+  max-width: var(--docs-content-max);
+}
+
+.docs-prose :is(h2, h3) {
+  scroll-margin-top: calc(var(--docs-header-height) + 1rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.docs-prose h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.35rem;
+  line-height: 1.35;
+  color: var(--foreground);
+}
+
+.docs-prose h3 {
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+  color: var(--foreground);
+}
+
+.docs-prose p,
+.docs-prose ul,
+.docs-prose ol {
+  margin: 0.85rem 0;
+  color: var(--muted-foreground);
+  line-height: 1.65;
+}
+
+.docs-prose a {
+  color: var(--brand-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.docs-prose :not(pre) > code {
+  border-radius: 0.35rem;
+  background: var(--muted);
+  padding: 0.1rem 0.35rem;
+  font-size: 0.9em;
+  color: var(--foreground);
+}
+
+.docs-prose pre {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 0.5rem);
+  background: var(--muted);
+  padding: 1rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.docs-demo-frame {
+  position: relative;
+  overflow: visible;
+  min-height: 12rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hit-target {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
