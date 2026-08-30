@@ -14,7 +14,7 @@
     "prepublishOnly": "node -e \"console.error('Do not publish the workspace root. Use: pnpm publish:core'); process.exit(1)\"",
     "build": "pnpm -r build",
     "build:pages": "sh -c 'VITE_BASE_PATH=${VITE_BASE_PATH:-/kamod-motion/} pnpm --filter @kamod-ch/motion build && pnpm --filter @kamod-ch/motion-docs build'",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm --filter @kamod-ch/motion typecheck && pnpm --filter @kamod-ch/motion build && pnpm -r --filter '!@kamod-ch/motion' typecheck",
     "test": "pnpm -r test",
     "test:e2e": "pnpm --filter @kamod-ch/motion-docs test:e2e",
     "test:docs": "pnpm test:e2e",
