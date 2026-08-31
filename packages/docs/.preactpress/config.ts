@@ -1,10 +1,7 @@
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { defineConfig } from "@kamod-ch/preactpress/config";
 import { getThemeInitScript } from "@kamod-ch/themes";
 import tailwindcss from "@tailwindcss/vite";
 
-const configDir = dirname(fileURLToPath(import.meta.url));
 const isGithubPages =
   process.env.GITHUB_ACTIONS === "true" || process.env.KAMOD_DOCS_BASE === "github-pages";
 const base = process.env.VITE_BASE_PATH ?? (isGithubPages ? "/kamod-motion/" : "/");
