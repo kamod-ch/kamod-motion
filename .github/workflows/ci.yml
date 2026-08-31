@@ -55,7 +55,10 @@ jobs:
         run: pnpm build
 
       - name: Build docs site
-        run: pnpm --filter @kamod-ch/motion-docs build
+        run: pnpm docs:build
+
+      - name: Check docs site
+        run: pnpm docs:check
 
       - name: Install Playwright browsers
         run: pnpm --filter @kamod-ch/motion-docs exec playwright install chromium

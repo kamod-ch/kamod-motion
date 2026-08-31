@@ -1,55 +1,17 @@
-import fs from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "@kamod-ch/preactpress/config";
 import { getThemeInitScript } from "@kamod-ch/themes";
 import tailwindcss from "@tailwindcss/vite";
-import type { Connect, Plugin } from "vite";
 
 const configDir = dirname(fileURLToPath(import.meta.url));
-const docsRoot = resolve(configDir, "..");
-const base = process.env.VITE_BASE_PATH ?? "/";
-
-const faviconFiles = new Map([["/favicon.svg", { file: "favicon.svg", type: "image/svg+xml" }]]);
+const isGithubPages =
+  process.env.GITHUB_ACTIONS === "true" || process.env.KAMOD_DOCS_BASE === "github-pages";
+const base = process.env.VITE_BASE_PATH ?? (isGithubPages ? "/kamod-motion/" : "/");
 
 function publicUrl(assetPath: string): string {
   const prefix = base === "/" ? "" : base.replace(/\/$/, "");
   return `${prefix}/${assetPath.replace(/^\//, "")}`;
-}
-
-function kamodFaviconDevPlugin(): Plugin {
-  return {
-    name: "kamod-motion-favicon-dev",
-    enforce: "pre",
-    configureServer(server) {
-      const serveKamodFavicon: Connect.NextHandleFunction = (req, res, next) => {
-        const pathname = req.url?.split("?")[0] ?? "";
-        const favicon = faviconFiles.get(pathname);
-
-        if (!favicon) {
-          next();
-          return;
-        }
-
-        void fs
-          .readFile(join(docsRoot, "public", favicon.file))
-          .then((body) => {
-            res.statusCode = 200;
-            res.setHeader("Content-Type", favicon.type);
-            res.setHeader("Cache-Control", "no-store, max-age=0");
-            res.end(body);
-          })
-          .catch(() => next());
-      };
-
-      const stack = server.middlewares.stack;
-      if (Array.isArray(stack)) {
-        stack.unshift({ route: "", handle: serveKamodFavicon });
-      } else {
-        server.middlewares.use(serveKamodFavicon);
-      }
-    },
-  };
 }
 
 export default defineConfig({
@@ -77,7 +39,8 @@ export default defineConfig({
     typographer: true,
   },
   head: [
-    ["link", { rel: "icon", href: publicUrl("favicon.svg"), type: "image/svg+xml" }],
+    ["link", { rel: "icon", href: `${base}favicon.svg`, type: "image/svg+xml" }],
+    ["link", { rel: "apple-touch-icon", href: `${base}favicon.svg` }],
     ["link", { rel: "stylesheet", href: publicUrl("styles/logo.css") }],
     [
       "link",
@@ -89,7 +52,7 @@ export default defineConfig({
     ["script", { type: "text/javascript" }, getThemeInitScript({ defaultScheme: "system" })],
   ],
   vite: {
-    plugins: [kamodFaviconDevPlugin(), tailwindcss()],
+    plugins: [tailwindcss()],
     resolve: {
       dedupe: ["preact", "preact/hooks", "@preact/signals", "motion", "motion/mini"],
     },

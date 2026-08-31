@@ -1,6 +1,8 @@
 name: Deploy docs to GitHub Pages
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -34,10 +36,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build docs with Pages base path
-        run: pnpm run build:pages
+      - name: Build docs
+        run: pnpm docs:build
         env:
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          KAMOD_DOCS_BASE: github-pages
 
       - name: Verify docs artifact
         run: |
