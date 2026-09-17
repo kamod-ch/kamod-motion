@@ -46,9 +46,11 @@
     "release": "node ./scripts/release.mjs patch",
     "release:minor": "node ./scripts/release.mjs minor",
     "release:major": "node ./scripts/release.mjs major",
-    "release:dry": "node ./scripts/release.mjs patch --dry"
+    "release:dry": "node ./scripts/release.mjs patch --dry",
+    "brand:readme": "kamod-brand-readme --product Motion --output .github/assets"
   },
   "devDependencies": {
+    "@kamod-ch/brand": "^0.1.9",
     "@types/node": "^25.9.2",
     "oxfmt": "^0.54.0",
     "oxlint": "^1.69.0",
