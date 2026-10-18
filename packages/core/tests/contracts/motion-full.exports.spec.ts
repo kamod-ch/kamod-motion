@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { animate, animateMini, animateValue, inView, motionValue, scroll, stagger } from "motion";
 
-describe("motion@13.1.1 / motion (dom) exports", () => {
+describe("motion@14.3.0 / motion (dom) exports", () => {
   it("exposes the hybrid animate overload surface", () => {
     expect(typeof animate).toBe("function");
     expect(typeof animateMini).toBe("function");

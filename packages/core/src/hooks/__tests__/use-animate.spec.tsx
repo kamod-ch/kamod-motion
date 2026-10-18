@@ -1,4 +1,5 @@
-import { render, waitFor } from "@testing-library/preact";
+import { waitFor } from "@testing-library/dom";
+import { render } from "@testing-library/preact";
 import { useEffect } from "preact/hooks";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useAnimate } from "../use-animate.js";

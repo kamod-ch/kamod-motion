@@ -1,7 +1,8 @@
 /**
  * @vitest-environment jsdom
  */
-import { render, waitFor } from "@testing-library/preact";
+import { waitFor } from "@testing-library/dom";
+import { render } from "@testing-library/preact";
 import { useRef } from "preact/hooks";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { animateSvg } from "../animate-svg.js";

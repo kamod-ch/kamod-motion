@@ -1,6 +1,6 @@
 {
   "name": "@kamod-ch/motion",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Preact-first animation primitives built on Vanilla Motion (mini engine by default).",
   "keywords": [
     "animation",
@@ -84,7 +84,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup && cp src/presets/tokens.css src/presets/tokens.css.d.ts dist/presets/",
+    "build": "tsup && tsc -p tsconfig.build.json && cp src/presets/tokens.css src/presets/tokens.css.d.ts dist/presets/",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -97,20 +97,21 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
+    "@testing-library/dom": "^10.4.2",
     "@testing-library/preact": "^3.2.4",
-    "@types/node": "^25.9.2",
-    "jsdom": "^29.1.1",
-    "motion": "^13.1.1",
-    "preact": "^10.29.8",
-    "preact-render-to-string": "^6.6.4",
-    "publint": "^0.3.24",
-    "tsup": "^8.5.1",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.11"
+    "@types/node": "^26.6.5",
+    "jsdom": "^30.1.3",
+    "motion": "^14.3.0",
+    "preact": "^11.0.1",
+    "preact-render-to-string": "^6.8.1",
+    "publint": "^0.3.25",
+    "tsup": "^9.0.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
   },
   "peerDependencies": {
-    "motion": "^13.1.1",
-    "preact": "^10.29.8"
+    "motion": "^14.3.0",
+    "preact": "^11.0.0"
   },
   "engines": {
     "node": ">=20"

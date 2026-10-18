@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { animate, animateSequence } from "motion/mini";
 
-describe("motion@13.1.1 / motion/mini exports", () => {
+describe("motion@14.3.0 / motion/mini exports", () => {
   it("exposes animate (WAAPI animateMini alias)", () => {
     expect(typeof animate).toBe("function");
   });

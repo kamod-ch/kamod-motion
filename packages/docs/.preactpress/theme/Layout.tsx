@@ -1,6 +1,6 @@
 import type { LayoutProps } from "@kamod-ch/preactpress/client";
 import { syncThemeFromStorage } from "@kamod-ch/themes";
-import type { ComponentChildren, FunctionalComponent, JSX } from "preact";
+import type { ComponentChildren, FunctionalComponent, HeadingHTMLAttributes, JSX } from "preact";
 import { useEffect, useMemo, useState } from "preact/hooks";
 import { PlaygroundLab } from "../../components/playground/PlaygroundLab";
 import { BrandLogo } from "../../components/shared/BrandLogo";
@@ -62,7 +62,7 @@ function createMdxHeadingComponents() {
   const used = new Map<string, number>();
   const heading =
     (Tag: "h2" | "h3") =>
-    ({ children, ...props }: JSX.HTMLAttributes<HTMLHeadingElement>) => {
+    ({ children, ...props }: HeadingHTMLAttributes<HTMLHeadingElement>) => {
       const base = slugify(childText(children));
       const count = used.get(base) ?? 0;
       used.set(base, count + 1);

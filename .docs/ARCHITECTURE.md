@@ -2,7 +2,7 @@
 
 This document defines binding rules for the `kamod-ch/kamod-motion` monorepo.
 
-**Audited dependency:** `motion@13.1.1` (lockfile + installed types in `node_modules/motion/dist/*.d.ts`, backed by `framer-motion@13.1.1` → `motion-dom@13.1.1`).
+**Audited dependency:** `motion@14.3.0` (lockfile + installed types in `node_modules/motion/dist/*.d.ts`).
 
 ## Goals
 
@@ -29,7 +29,7 @@ examples/
 
 ---
 
-## Verified Motion support matrix (`motion@13.1.1`)
+## Verified Motion support matrix (`motion@14.3.0`)
 
 Sources: installed `.d.ts` files (`motion/dist/mini.d.ts`, `motion/dist/index.d.ts` → `framer-motion/dist/dom*.d.ts`, `motion-dom/dist/index.d.ts`) and runtime smoke tests in `packages/core/tests/contracts/`.
 
@@ -125,7 +125,7 @@ Returned by both engines (typed in `motion-dom/dist/index.d.ts`):
 
 ## Version 0.1 export map (contract)
 
-Implementation follows in a later phase. Types reference `motion-dom` shapes via `motion` / `motion/mini` peer.
+Implemented in `@kamod-ch/motion` 0.2. Types reference `motion-dom` shapes via `motion` / `motion/mini` peer.
 
 ### `@kamod-ch/motion` (mini engine default)
 
@@ -167,7 +167,7 @@ Implementation follows in a later phase. Types reference `motion-dom` shapes via
 
 ## v0.1 API signatures
 
-Types shown as `@kamod-ch/motion` contracts; underlying animation types come from `motion-dom` via peer `motion@^13.1.1`.
+Types shown as `@kamod-ch/motion` contracts; underlying animation types come from `motion-dom` via peer `motion@^14.3.0`.
 
 ### Shared types
 
@@ -470,12 +470,12 @@ Measured 2026-08-30 with `esbuild --bundle --minify --platform=browser` + `gzip 
 
 ### `@kamod-ch/motion` wrapper budgets (esbuild gzip, peers external)
 
-| Entry                              | v0.1 budget | Measurement command (CI, future) |
-| ---------------------------------- | ----------- | -------------------------------- |
-| `@kamod-ch/motion` (mini subgraph) | ≤ **8 KB**  | `pnpm size` (root entry)         |
-| `@kamod-ch/motion/value`           | ≤ **3 KB**  | `pnpm size` (value entry)        |
-| `@kamod-ch/motion/svg`             | ≤ **4 KB**  | `pnpm size` (svg entry)          |
-| `@kamod-ch/motion/hybrid`          | ≤ **20 KB** | `pnpm size` (hybrid entry)       |
+| Entry                              | v0.2 budget | Measurement command        |
+| ---------------------------------- | ----------- | -------------------------- |
+| `@kamod-ch/motion` (mini subgraph) | ≤ **8 KB**  | `pnpm size` (root entry)   |
+| `@kamod-ch/motion/value`           | ≤ **3 KB**  | `pnpm size` (value entry)  |
+| `@kamod-ch/motion/svg`             | ≤ **4 KB**  | `pnpm size` (svg entry)    |
+| `@kamod-ch/motion/hybrid`          | ≤ **20 KB** | `pnpm size` (hybrid entry) |
 
 Measurement excludes `preact`, `motion`, and `motion/mini` (peer dependencies). CI step runs after implementation lands.
 
@@ -528,14 +528,15 @@ Tooling only: `typescript`, `oxlint`, `oxfmt`, `@types/node`.
 
 ## Build pipeline
 
-1. **tsup** — ESM + `.d.ts`, externals for Preact and Motion.
-2. **tsc --noEmit** — strict typecheck (`src/`, `tests/contracts/`).
-3. **vitest** — unit tests + `tests/contracts/` smoke/type tests.
-4. **publint** / **attw** (`esm-only`) — publish shape.
+1. **tsup** — ESM JS only (`dts: false`), externals for Preact and Motion.
+2. **tsc -p tsconfig.build.json** — declaration emit (TypeScript 7 has no compiler API for tsup `dts`).
+3. **tsc --noEmit** — strict typecheck (`src/`, `tests/contracts/`).
+4. **vitest** — unit tests + `tests/contracts/` smoke/type tests.
+5. **publint** / **attw** (`esm-only`) — publish shape.
 
 ## Tooling conventions
 
-- **pnpm** 11.x · **Node** ≥ 20 (CI: 22) · **TypeScript** 6.x · **Oxlint** + **Oxfmt**
+- **pnpm** 11.x · **Node** ≥ 20 (CI: 22) · **TypeScript** 7.x · **Oxlint** + **Oxfmt**
 
 ## CI quality gate
 

@@ -20,20 +20,20 @@
     "format:check": "oxfmt --check ."
   },
   "dependencies": {
-    "@kamod-ch/brand": "^0.1.0",
+    "@kamod-ch/brand": "^0.4.0",
     "@kamod-ch/motion": "workspace:*",
     "@kamod-ch/themes": "^0.2.1",
-    "@preact/signals": "^2.11.0",
-    "motion": "^13.1.1",
-    "preact": "^10.29.8"
+    "@preact/signals": "^2.11.3",
+    "motion": "^14.3.0",
+    "preact": "^11.0.1"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.11.3",
-    "@kamod-ch/preactpress": "^2.2.1",
-    "@playwright/test": "^1.60.0",
+    "@axe-core/playwright": "^4.14.0",
+    "@kamod-ch/preactpress": "^3.0.1",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/vite": "^4.3.3",
     "tailwindcss": "^4.3.3",
-    "typescript": "^6.0.3",
-    "vite": "^8.2.1"
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
   }
 }

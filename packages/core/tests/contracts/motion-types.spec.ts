@@ -8,7 +8,7 @@ import type {
   Transition,
 } from "motion";
 
-describe("motion@13.1.1 type contracts used by @kamod-ch/motion v0.1", () => {
+describe("motion@14.3.0 type contracts used by @kamod-ch/motion v0.2", () => {
   it("DOMKeyframesDefinition covers CSS, variables, and SVG path props", () => {
     const css: DOMKeyframesDefinition = {
       opacity: [0, 1],

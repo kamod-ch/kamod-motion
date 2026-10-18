@@ -1,6 +1,6 @@
 import { createElement } from "preact";
 import { forwardRef } from "preact/compat";
-import type { ComponentChildren, JSX, Ref } from "preact";
+import type { ComponentChildren, CSSProperties, JSX, Ref } from "preact";
 import { useLayoutEffect, useRef } from "preact/hooks";
 import { useReducedMotion } from "../hooks/use-reduced-motion.js";
 import { finishAnimation, runMiniAnimation } from "../mini/animate-element.js";
@@ -17,7 +17,7 @@ type MotionOwnProps = {
   reducedMotion?: ReducedMotionPolicy;
   children?: ComponentChildren;
   ref?: Ref<HTMLElement | SVGElement | null>;
-  style?: JSX.CSSProperties;
+  style?: CSSProperties;
 };
 
 export type MotionProps<T extends MotionElement = "div"> = MotionOwnProps & {

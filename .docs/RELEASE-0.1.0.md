@@ -1,6 +1,6 @@
-# Release notes — v0.1.0 (draft)
+# Release notes — v0.1.0 (historical)
 
-**Status:** QA complete, **not published**. Version set to `0.1.0` in `packages/core/package.json` for release preparation only.
+**Status:** Superseded by [v0.2.0](./RELEASE-0.2.0.md). Peers were Preact 10 and Motion 13.
 
 ## Recommendation
 

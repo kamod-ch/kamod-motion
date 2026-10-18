@@ -50,11 +50,11 @@
     "brand:readme": "kamod-brand-readme --product Motion --output .github/assets"
   },
   "devDependencies": {
-    "@kamod-ch/brand": "^0.1.9",
-    "@types/node": "^25.9.2",
-    "oxfmt": "^0.54.0",
-    "oxlint": "^1.69.0",
-    "typescript": "^6.0.3"
+    "@kamod-ch/brand": "^0.4.0",
+    "@types/node": "^26.6.5",
+    "oxfmt": "^0.73.0",
+    "oxlint": "^1.88.0",
+    "typescript": "^7.0.2"
   },
   "packageManager": "pnpm@11.17.0"
 }

@@ -1,4 +1,5 @@
-import { render, waitFor } from "@testing-library/preact";
+import { waitFor } from "@testing-library/dom";
+import { render } from "@testing-library/preact";
 import { useEffect } from "preact/hooks";
 import { describe, expect, it } from "vitest";
 import { prefersReducedMotion, useReducedMotion } from "../use-reduced-motion.js";
@@ -68,7 +69,9 @@ describe("useReducedMotion", () => {
       });
 
       unmount();
-      expect(controller.listenerCount()).toBe(0);
+      await waitFor(() => {
+        expect(controller.listenerCount()).toBe(0);
+      });
     });
   });
 

@@ -8,6 +8,7 @@
     "**/*.tsbuildinfo",
     "pnpm-lock.yaml",
     "**/playwright-report/**",
-    "**/test-results/**"
+    "**/test-results/**",
+    "kamod-ai-audit/**"
   ]
 }

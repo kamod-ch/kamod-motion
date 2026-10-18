@@ -22,17 +22,13 @@
 Preact-first animation primitives built on [Vanilla Motion](https://motion.dev/docs/quick-start). The default entry uses the lightweight `motion/mini` engine; the full hybrid engine is available via a separate opt-in import.
 
 ```tsx
-import { Motion } from '@kamod-ch/motion/motion'
-import { Presence } from '@kamod-ch/motion/presence'
-import { fade } from '@kamod-ch/motion/presets'
-import '@kamod-ch/motion/presets/tokens.css'
+import { Motion } from "@kamod-ch/motion/motion";
+import { Presence } from "@kamod-ch/motion/presence";
+import { fade } from "@kamod-ch/motion/presets";
+import "@kamod-ch/motion/presets/tokens.css";
 
 function Panel({ open }: { open: boolean }) {
-  return (
-    <Presence>
-      {open ? <Motion {...fade.in} /> : null}
-    </Presence>
-  )
+  return <Presence>{open ? <Motion {...fade.in} /> : null}</Presence>;
 }
 ```
 

@@ -3,3 +3,5 @@ packages:
   - "examples/*"
 allowBuilds:
   esbuild: false
+minimumReleaseAgeExclude:
+  - "@kamod-ch/brand@0.1.11 || 0.1.12 || 0.4.0"

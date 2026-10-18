@@ -39,9 +39,9 @@ writeFileSync(
       },
       dependencies: {
         "@kamod-ch/motion": `file:${tarball}`,
-        motion: "^13.1.1",
-        preact: "^10.29.8",
-        "preact-render-to-string": "^6.6.4",
+        motion: "^14.3.0",
+        preact: "^11.0.1",
+        "preact-render-to-string": "^6.8.1",
       },
     },
     null,
