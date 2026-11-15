@@ -1,7 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const previewPort = process.env.KAMOD_DOCS_E2E_PORT ?? "4174";
+const previewUrl = `http://127.0.0.1:${previewPort}`;
+
 /**
- * Docs E2E runs against the PreactPress preview server on port 4173.
+ * Docs E2E runs against an isolated PreactPress preview server.
  * Update baselines: `pnpm test:e2e --update-snapshots` (from packages/docs).
  */
 export default defineConfig({
@@ -14,14 +17,14 @@ export default defineConfig({
     timeout: 15_000,
   },
   use: {
-    baseURL: "http://127.0.0.1:4173/",
+    baseURL: `${previewUrl}/`,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
   webServer: {
-    command: "pnpm preview --host 127.0.0.1 --port 4173",
-    url: "http://127.0.0.1:4173",
-    reuseExistingServer: !process.env.CI,
+    command: `pnpm preview --host 127.0.0.1 --port ${previewPort}`,
+    url: previewUrl,
+    reuseExistingServer: false,
     timeout: 120_000,
   },
   projects: [
