@@ -1,6 +1,6 @@
 import { waitFor } from "@testing-library/dom";
 import { render } from "@testing-library/preact";
-import { useRef } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Motion } from "../motion/Motion.js";
 import { Presence } from "../presence/Presence.js";
@@ -89,6 +89,26 @@ describe("Motion", () => {
     expect(document.querySelector("button[type='button']")).toBeTruthy();
   });
 
+  it("renders heading, dialog, and input hosts", () => {
+    createControls({ immediate: true });
+    createControls({ immediate: true });
+    createControls({ immediate: true });
+
+    render(
+      <>
+        <Motion as="h1" animate={fade.animate}>
+          Title
+        </Motion>
+        <Motion as="dialog" open animate={fade.animate} />
+        <Motion as="input" aria-label="Name" animate={fade.animate} />
+      </>,
+    );
+
+    expect(document.querySelector("h1")?.textContent).toBe("Title");
+    expect(document.querySelector("dialog")).toBeTruthy();
+    expect(document.querySelector("input[aria-label='Name']")).toBeTruthy();
+  });
+
   it("applies reduced-motion fallbacks with skipAnimations", async () => {
     withMatchMediaMock(true, () => {
       render(
@@ -106,6 +126,70 @@ describe("Motion", () => {
 
     const [, , options] = animateMock.mock.calls.at(-1) ?? [];
     expect(options).toMatchObject({ skipAnimations: true, duration: 0 });
+  });
+
+  it("uses a preset reduced fallback instead of spatial keyframes", async () => {
+    withMatchMediaMock(true, () => {
+      render(<Motion preset={slideUp} reducedMotion="always" />);
+    });
+
+    await waitFor(() => {
+      expect(animateMock).toHaveBeenCalled();
+    });
+
+    const [, keyframes, options] = animateMock.mock.calls.at(-1) ?? [];
+    expect(keyframes).toEqual(slideUp.reduced?.animate);
+    expect(options).toMatchObject({ skipAnimations: true, duration: 0 });
+    expect(document.querySelector("[reduced]")).toBeNull();
+  });
+
+  it("does not forward a spread preset reduced fallback to the DOM", () => {
+    render(<Motion {...slideUp} />);
+
+    expect(document.querySelector("[reduced]")).toBeNull();
+  });
+
+  it("drops initial inline styles after the client animation starts", () => {
+    const seen: string[] = [];
+    animateMock.mockImplementation((element: HTMLElement) => {
+      seen.push(element.style.opacity);
+      return createNoopControls();
+    });
+
+    render(<Motion initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} />);
+
+    expect(seen[0]).toBe("0");
+    expect(document.querySelector("div")?.style.opacity).toBe("");
+  });
+
+  it("does not replay enter when presence settles to present", async () => {
+    createControls({ immediate: true });
+
+    render(
+      <Presence show>
+        <Motion initial={fade.initial} animate={fade.animate} exit={fade.exit}>
+          Once
+        </Motion>
+      </Presence>,
+    );
+
+    await waitFor(() => {
+      expect(animateMock).toHaveBeenCalled();
+    });
+
+    expect(animateMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps a running animation when the parent passes new keyframe objects", async () => {
+    createControls();
+
+    render(<ReplayHost />);
+
+    await waitFor(() => {
+      expect(document.querySelector("[data-tick='1']")).toBeTruthy();
+    });
+
+    expect(animateMock).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -271,6 +355,16 @@ describe("Motion cleanup", () => {
     expect(controls.stop).toHaveBeenCalled();
   });
 });
+
+function ReplayHost() {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    setTick(1);
+  }, []);
+  return (
+    <Motion animate={{ opacity: 1 }} transition={{ duration: 0.25 }} data-tick={String(tick)} />
+  );
+}
 
 function RefProbe({ onRef }: { onRef: (node: HTMLDivElement | null) => void }) {
   useRef(false);

@@ -17,7 +17,7 @@ Install the package and peer dependencies:
   <CopyButton value="pnpm add @kamod-ch/motion preact motion" />
 </div>
 
-Import motion duration tokens once in your app entry (optional but recommended):
+Import motion duration tokens once in your app entry when your own CSS should share them. `Motion` presets do not read these variables; they carry the same timing in JavaScript.
 
 ```ts
 import "@kamod-ch/motion/presets/tokens.css";
@@ -50,16 +50,16 @@ render(
 
 ## Entry points
 
-| Import                      | Purpose                          |
-| --------------------------- | -------------------------------- |
-| `@kamod-ch/motion`          | Mini engine re-exports (default) |
-| `@kamod-ch/motion/motion`   | `Motion` component               |
-| `@kamod-ch/motion/presence` | `Presence`, `usePresence`        |
-| `@kamod-ch/motion/presets`  | Fade, scale, slide presets       |
-| `@kamod-ch/motion/hooks/*`  | `useAnimate`, `useReducedMotion` |
-| `@kamod-ch/motion/value`    | Animated numbers                 |
-| `@kamod-ch/motion/svg`      | SVG path utilities               |
-| `@kamod-ch/motion/hybrid`   | Full Motion engine (opt-in)      |
+| Import                      | Purpose                                   |
+| --------------------------- | ----------------------------------------- |
+| `@kamod-ch/motion`          | Mini engine re-exports (default)          |
+| `@kamod-ch/motion/motion`   | `Motion` component                        |
+| `@kamod-ch/motion/presence` | `Presence`, `PresenceList`, `usePresence` |
+| `@kamod-ch/motion/presets`  | Fade, scale, slide presets                |
+| `@kamod-ch/motion/hooks/*`  | `useAnimate`, `useReducedMotion`          |
+| `@kamod-ch/motion/value`    | Animated numbers                          |
+| `@kamod-ch/motion/svg`      | SVG path utilities                        |
+| `@kamod-ch/motion/hybrid`   | Full Motion engine (opt-in)               |
 
 ## Next steps
 

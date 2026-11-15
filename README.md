@@ -28,7 +28,11 @@ import { fade } from "@kamod-ch/motion/presets";
 import "@kamod-ch/motion/presets/tokens.css";
 
 function Panel({ open }: { open: boolean }) {
-  return <Presence>{open ? <Motion {...fade.in} /> : null}</Presence>;
+  return (
+    <Presence show={open}>
+      <Motion preset={fade} />
+    </Presence>
+  );
 }
 ```
 

@@ -16,23 +16,19 @@ Presets are plain data objects compatible with `Motion` and `Presence`. Import f
 - `fade`, `scale`
 - `slideUp`, `slideDown`, `slideLeft`, `slideRight`
 - `stagger(interval, startDelay)` — delay factory for list entrances
-- `resolvePreset(preset, reducedMotion)` — pick reduced fallback
+- `resolvePreset(preset, reducedMotion)` — pick the reduced fallback yourself for imperative calls
 
 <CodePreview
   language="tsx"
   code={`import { Motion } from "@kamod-ch/motion/motion";
-import { slideUp, resolvePreset } from "@kamod-ch/motion/presets";
-import { useReducedMotion } from "@kamod-ch/motion/hooks/use-reduced-motion";
+import { Presence } from "@kamod-ch/motion/presence";
+import { slideUp } from "@kamod-ch/motion/presets";
 
-const reduced = useReducedMotion();
-const preset = resolvePreset(slideUp, reduced);
-
-<Motion
-  initial={preset.initial}
-  animate={preset.animate}
-  exit={preset.exit}
-  transition={preset.transition}
-/>`}
+<Presence show={open}>
+  <Motion preset={slideUp} />
+</Presence>`}
 />
 
-Import `@kamod-ch/motion/presets/tokens.css` for shared duration and easing CSS variables.
+`Motion` reads `preset.reduced` when reduced motion is active. `resolvePreset` remains for code that drives `animate()` directly.
+
+Import `@kamod-ch/motion/presets/tokens.css` when your own CSS should share these durations and easings. Preset objects do not read the variables at runtime; they carry the same 250ms standard ease in JavaScript. The `prefers-reduced-motion` block in the stylesheet only shortens those CSS variables.

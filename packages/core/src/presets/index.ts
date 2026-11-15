@@ -14,11 +14,6 @@ const defaultTransition: KamodTransition = {
   ease: [0.4, 0, 0.2, 1],
 };
 
-const exitTransition: KamodTransition = {
-  duration: 0.2,
-  ease: [0.4, 0, 1, 1],
-};
-
 const fadeOnly: Preset = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
@@ -90,27 +85,4 @@ export const motionPresets = {
   slideRight,
   stagger,
   resolvePreset,
-} as const;
-
-/** @deprecated Use named exports or `motionPresets`. Kept for ARCHITECTURE.md aliases. */
-export const fadeIn = fade;
-/** @deprecated Use `fade` with exit keyframes configured manually. */
-export const fadeOut: Preset = {
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: exitTransition,
-} as const;
-
-export const slideInFromTop = slideDown;
-export const slideInFromBottom = slideUp;
-export const slideInFromLeft = slideRight;
-export const slideInFromRight = slideLeft;
-
-export const zoomIn95 = scale;
-export const zoomOut95: Preset = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.95 },
-  transition: defaultTransition,
-  reduced: fadeOnly,
 } as const;

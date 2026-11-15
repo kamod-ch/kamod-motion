@@ -1,0 +1,873 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: smoke.spec.ts >> smoke: / loads
+- Location: e2e/smoke.spec.ts:21:3
+
+# Error details
+
+```
+Error: expect(locator).toBeVisible() failed
+
+Locator: locator('#content')
+Expected: visible
+Timeout: 15000ms
+Error: element(s) not found
+
+Call log:
+  - Expect "toBeVisible" locator('#content') with timeout 15000ms
+  - waiting for locator('#content')
+
+```
+
+```yaml
+- banner:
+  - link "Kamod UI":
+    - /url: /
+  - link "Components":
+    - /url: /docs/components
+  - link "Blocks":
+    - /url: /blocks
+  - link "Forms":
+    - /url: /docs/forms
+  - link "Packages":
+    - /url: /docs/packages
+  - button "Choose color theme": Kamod
+  - button "Choose color mode"
+  - link "Kamod UI Repository on GitHub":
+    - /url: https://github.com/kamod-ch/kamod-ui
+- main:
+  - paragraph: Kamod UI The Documentation
+  - heading "Preact UI components with clear foundations. Build your next project with Kamod UI." [level=1]
+  - paragraph:
+    - link "Kamod UI":
+      - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core
+      - code: Kamod UI
+    - text: is a
+    - strong:
+      - link "Preact":
+        - /url: https://preactjs.com/
+        - code: Preact
+      - text: UI library
+    - text: of components, complete blocks, and a shared design language. Explore working examples, understand the code, and shape an interface that feels like your product.
+  - paragraph:
+    - text: A practical home for
+    - link "TypeScript":
+      - /url: https://www.typescriptlang.org/
+      - code: TypeScript
+    - text: ","
+    - link "Tailwind CSS":
+      - /url: https://tailwindcss.com/
+      - code: Tailwind CSS
+    - text: and the Kamod stack. Start small. Learn each piece. Build with confidence.
+  - link "Get Started":
+    - /url: /docs/getting-started
+  - link "Explore Components":
+    - /url: /docs/components
+  - paragraph: Open Source Preact Native Yours to Adapt
+  - region "Interactive workspace example":
+    - text: Component Composition Live Preview
+    - tablist "Workspace example view":
+      - tab "Preview" [selected]
+      - tab "Code"
+      - tab "Prompt"
+    - group "Example controls":
+      - button "Refresh"
+      - status
+      - link "Open Preview in a New Tab":
+        - /url: /component-preview-frame.htm?component=home-workspace&example=0&previewTheme=kamod&previewScheme=light
+    - group "Preview appearance":
+      - button "Dark preview"
+      - button "Preview color theme"
+    - tabpanel "Preview":
+      - iframe
+      - text: Built With
+      - navigation "Components used in this preview":
+        - link "Input":
+          - /url: /docs/input/installation#api-reference
+          - code: Input
+        - link "Switch":
+          - /url: /docs/switch/installation#api-reference
+          - code: Switch
+        - link "Button":
+          - /url: /docs/button/installation#api-reference
+          - code: Button
+  - paragraph: Try the controls, explore the code, or reset and start again. Theme changes stay in this preview.
+  - separator
+  - region "Live Component Playground":
+    - paragraph: Kitchen Sink
+    - heading "Live Component Playground" [level=2]
+    - paragraph: Forms, inputs, feedback and navigation patterns in one composite grid — the same showcase that powers the demo site.
+    - link "Open full kitchen sink":
+      - /url: /kitchen-sink
+    - heading "Payment Method" [level=3]
+    - paragraph: All transactions are secure and encrypted
+    - text: Name on Card
+    - textbox "Name on Card":
+      - /placeholder: John Doe
+    - text: Card Number
+    - textbox "Card Number":
+      - /placeholder: 1234 5678 9012 3456
+    - paragraph: Enter your 16-digit number.
+    - text: CVV
+    - textbox "CVV":
+      - /placeholder: "123"
+    - text: Month
+    - button "MM"
+    - text: Year
+    - button "YYYY"
+    - separator
+    - heading "Billing Address" [level=4]
+    - paragraph: The billing address associated with your payment method
+    - checkbox "Same as shipping address" [checked]
+    - text: Same as shipping address
+    - separator
+    - heading "Comments" [level=4]
+    - textbox "Add any additional comments"
+    - button "Submit"
+    - button "Cancel"
+    - heading "No Team Members" [level=3]
+    - paragraph: Invite your team to collaborate on this project.
+    - button "Invite Members"
+    - status "Loading"
+    - text: Syncing
+    - status "Loading"
+    - text: Updating
+    - status "Loading"
+    - text: Loading
+    - button "Add"
+    - group:
+      - textbox "Send a message..."
+      - button "Voice input"
+    - heading "Price Range" [level=3]
+    - paragraph:
+      - text: Budget $260 – $740 (dual-thumb
+      - button "Slider"
+      - text: ).
+    - group:
+      - slider "Value 1 of 2": "260"
+      - slider "Value 2 of 2": "740"
+    - group:
+      - textbox "Search..."
+      - text: 12 results
+    - group:
+      - text: https://
+      - textbox: example.com
+      - button "Info"
+    - textbox "Ask, Search or Chat..."
+    - button "Add"
+    - 'button "Chat mode: Auto"': Auto
+    - text: 52% used
+    - button "Send"
+    - group:
+      - textbox: "@shadcn"
+      - group:
+        - status "Selected"
+    - heading "Two-Factor Authentication" [level=3]
+    - paragraph: Verify via email or phone number.
+    - button "Enable"
+    - paragraph: Your profile has been verified.
+    - separator
+    - paragraph: Compute Environment
+    - paragraph: Select the compute environment for your cluster.
+    - radiogroup:
+      - radio "Kubernetes Run GPU workloads on a K8s configured cluster. This is the default." [checked]
+      - text: Kubernetes Run GPU workloads on a K8s configured cluster. This is the default.
+      - radio "Virtual Machine Access a VM configured cluster to run workloads."
+      - text: Virtual Machine Access a VM configured cluster to run workloads.
+    - text: Number of GPUs
+    - paragraph: You can add more later.
+    - button "Decrease GPUs": −
+    - text: "2"
+    - button "Increase GPUs": +
+    - separator
+    - paragraph: Appearance Settings
+    - paragraph: Wallpaper Tinting
+    - paragraph: Allow the wallpaper to be tinted.
+    - switch "Wallpaper tinting" [checked]
+    - button "Add context"
+    - textbox "Ask, search, or make anything…"
+    - toolbar "Prompt actions":
+      - button "Attach file"
+      - 'button "Chat mode: Auto"': Auto
+      - button "Search sources": All Sources
+      - button "Submit"
+    - button "Archive"
+    - button "Report"
+    - button "Snooze"
+    - button "More"
+    - checkbox "Agree to terms" [checked]
+    - text: I agree to the terms and conditions
+    - navigation "pagination":
+      - list:
+        - listitem:
+          - link "Go to previous page":
+            - /url: "#"
+            - text: Previous
+        - listitem:
+          - link "1":
+            - /url: "#"
+        - listitem:
+          - link "2":
+            - /url: "#"
+        - listitem:
+          - link "3":
+            - /url: "#"
+        - listitem:
+          - link "Go to next page":
+            - /url: "#"
+            - text: Next
+    - text: How Did You Hear about Us? Select the option that best describes how you heard about us.
+    - group "How Did You Hear about Us?":
+      - checkbox "Social Media" [checked]
+      - text: Social Media
+      - checkbox "Search Engine" [checked]
+      - text: Search Engine
+      - checkbox "Referral"
+      - text: Referral
+      - checkbox "Other"
+      - text: Other
+    - status "Loading"
+    - paragraph: Processing Your Request
+    - paragraph: Please wait while we process your request. Do not refresh the page.
+    - button "Cancel"
+  - navigation "Explore the Kamod UI documentation":
+    - link "01 Start with a control Components Buttons, inputs, navigation and feedback. Learn the API, try the variants, then compose.":
+      - /url: /docs/components
+    - link "02 Start with a layout Blocks Application shells, sidebars and authentication screens with source you can adapt.":
+      - /url: /blocks
+    - link "03 Connect the interaction Forms Labels, validation and submission—from a native field to a coordinated schema form.":
+      - /url: /docs/forms
+    - link "04 Add a capability Packages Focused tools for icons, hooks, reactive persistence, shared state and localization.":
+      - /url: /docs/packages
+  - region "Start Small. Make It Work.":
+    - paragraph: 01 Components
+    - heading "Start Small. Make It Work." [level=2]
+    - paragraph:
+      - text: A good interface begins with a clear action. Use
+      - link "Button":
+        - /url: /docs/button/installation#api-reference
+        - code: Button
+      - text: for the next step,
+      - link "Input":
+        - /url: /docs/input/installation#api-reference
+        - code: Input
+      - text: for a value, and
+      - link "Dialog":
+        - /url: /docs/dialog/installation#api-reference
+        - code: Dialog
+      - text: when a decision needs focus. Kamod gives these pieces a consistent foundation while
+      - strong: Your Application Owns the Behavior
+      - text: .
+    - paragraph:
+      - text: Each component guide brings together
+      - strong: Live Variants, Copyable Source and an API Reference
+      - text: . Try the interaction first, then inspect the props and adapt the example to your data.
+    - paragraph:
+      - text: The example beside this text keeps the save operation in the parent. When that operation becomes asynchronous, add pending and error feedback at the same boundary; the
+      - link "State Ownership Guide":
+        - /url: /docs/getting-started#give-state-one-owner
+      - text: explains the pattern.
+    - link "Explore the Button Guide":
+      - /url: /docs/button/installation
+    - strong: A Small, Reusable Action
+    - text: Your Save Logic
+    - link "Preact":
+      - /url: https://preactjs.com/
+    - link "TypeScript":
+      - /url: https://www.typescriptlang.org/
+    - code:
+      - img "TypeScript JSX (.tsx)"
+      - text: src/ components /SaveAction.tsx
+    - group "Source controls":
+      - button "Download code"
+      - status
+      - button "Copy code"
+      - status
+    - button "Hide imports" [expanded]:
+      - code: "import { … }"
+      - strong: "1"
+      - text: statement shown
+    - switch "Wrap code lines"
+    - text: wrap disabled
+    - status:
+      - strong: Opening the source
+      - paragraph: src/components/SaveAction.tsx
+    - paragraph:
+      - text: After
+      - link "Setting Up Your App":
+        - /url: /docs/getting-started#set-up-your-app
+      - text: ", import a component and give it one useful job. Use"
+      - code: type="submit"
+      - text: when the action submits a form.
+    - navigation "Popular component guides":
+      - strong:
+        - link "Button":
+          - /url: /docs/button/installation
+      - link "@/components/kamod-ui/button":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core/src/components/button
+        - code: "@/components/kamod-ui/button"
+      - text: Make the next action clear.
+      - strong:
+        - link "Input":
+          - /url: /docs/input/installation
+      - link "@/components/kamod-ui/input":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core/src/components/input
+        - code: "@/components/kamod-ui/input"
+      - text: Give every field a useful label.
+      - strong:
+        - link "Dialog":
+          - /url: /docs/dialog/installation
+      - link "@/components/kamod-ui/dialog":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core/src/components/dialog
+        - code: "@/components/kamod-ui/dialog"
+      - text: Focus on one decision at a time.
+      - strong:
+        - link "Tabs":
+          - /url: /docs/tabs/installation
+      - link "@/components/kamod-ui/tabs":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core/src/components/tabs
+        - code: "@/components/kamod-ui/tabs"
+      - text: Organize related views.
+      - strong:
+        - link "Accordion":
+          - /url: /docs/accordion/installation
+      - link "@/components/kamod-ui/accordion":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core/src/components/accordion
+        - code: "@/components/kamod-ui/accordion"
+      - text: Reveal detail when it is needed.
+      - strong:
+        - link "Table":
+          - /url: /docs/table/installation
+      - link "@/components/kamod-ui/table":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core/src/components/table
+        - code: "@/components/kamod-ui/table"
+      - text: Give structured data a readable home.
+      - strong:
+        - link "Tooltip":
+          - /url: /docs/tooltip/installation
+      - link "@/components/kamod-ui/tooltip":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core/src/components/tooltip
+        - code: "@/components/kamod-ui/tooltip"
+      - text: A little context, right on cue.
+      - strong:
+        - link "Popover":
+          - /url: /docs/popover/installation
+      - link "@/components/kamod-ui/popover":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core/src/components/popover
+        - code: "@/components/kamod-ui/popover"
+      - text: Keep the details close by.
+      - strong:
+        - link "Select":
+          - /url: /docs/select/installation
+      - link "@/components/kamod-ui/select":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core/src/components/select
+        - code: "@/components/kamod-ui/select"
+      - text: Make room for a better choice.
+    - paragraph:
+      - text: Just a few familiar faces.
+      - link "Meet the whole collection":
+        - /url: /docs/components
+  - region "One Theme. Every Piece Belongs.":
+    - paragraph: 02 A Shared Foundation
+    - heading "One Theme. Every Piece Belongs." [level=2]
+    - paragraph:
+      - text: Give the first component a home before adding the next. Load
+      - strong: Shared Styles and Semantic Tokens
+      - text: once, then let buttons, form fields and whole layouts speak the same visual language.
+    - paragraph:
+      - text: Use roles such as
+      - code: bg-background
+      - text: ","
+      - code: text-foreground
+      - text: and
+      - button "border-border"
+      - text: instead of repeating fixed colors. Pair a primary action’s background with
+      - code: text-primary-foreground
+      - text: ", and let the theme supply the values."
+    - paragraph:
+      - strong: Try a Different Palette Here.
+      - text: This page and its examples follow the selected preset and color scheme. The
+      - link "Appearance Controls Guide":
+        - /url: /docs/theming/provider-controls
+      - text: covers saved choices and system preferences.
+    - link "Understand the Theme":
+      - /url: /docs/theming/installation
+    - button "Choose color theme": Kamod
+    - text: Semantic Tokens
+    - strong: Color by Responsibility
+    - button "Dark mode"
+    - button "Choose color theme": Kamod
+    - button "--background"
+    - button "--card"
+    - code: "--muted"
+    - button "--primary"
+    - heading "A Theme Is More than an Accent" [level=3]
+    - paragraph: Keep surfaces, text, borders and focus feedback in balance. Review the same screen in both modes, including its empty, disabled and error states.
+    - navigation "Theme resources":
+      - link "Customize Theme Tokens":
+        - /url: /docs/theming/token-overrides
+      - link "CSS Setup":
+        - /url: /docs/theming/css-setup
+      - link "Check Contrast":
+        - /url: /docs/theming/accessibility
+    - link "Theme source on GitHub":
+      - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/themes/src
+  - region "Give Your Feature a Place to Live.":
+    - paragraph: 03 Complete Blocks
+    - heading "Give Your Feature a Place to Live." [level=2]
+    - paragraph:
+      - text: Move from individual controls to a complete screen. Start with an
+      - link "Application Shell":
+        - /url: /blocks/application-shell
+      - text: ", explore"
+      - link "Sidebar Layouts":
+        - /url: /blocks/sidebar
+      - text: ", or build an entry point with"
+      - link "Login":
+        - /url: /blocks/login
+      - text: and
+      - link "Signup Blocks":
+        - /url: /blocks/signup
+      - text: . The detail pages connect each live preview to its
+      - strong: Source Files, Setup Instructions and Integration Guidance
+      - text: .
+    - link "Browse Block Collections":
+      - /url: /blocks
+    - region "Application shell playground":
+      - strong: Application Shell
+      - text: Navigation & Layout Live Preview
+      - status: Loading the application shell playground…
+      - paragraph: A responsive application frame with navigation, account controls and room for your feature.
+      - link "Explore This Block":
+        - /url: /blocks/application-shell/application-shell-1
+    - text: 01 / Explore
+    - heading "Try the Whole Interaction" [level=3]
+    - paragraph: Open navigation, resize the screen and follow the keyboard path. Choose a layout for its behavior as well as its appearance.
+    - text: 02 / Understand
+    - heading "Read the Supporting Files" [level=3]
+    - paragraph: A block can include data, helpers and shared components. Use the file tree to understand the composition before copying it.
+    - text: 03 / Adapt
+    - heading "Connect Your Application" [level=3]
+    - paragraph:
+      - text: Replace example routes and content, wire your service boundaries, then follow the
+      - link "Block Setup Guide":
+        - /url: /blocks/getting-started
+      - text: to verify the result.
+  - region "Make Every Step Understandable.":
+    - paragraph: 04 Forms & Feedback
+    - heading "Make Every Step Understandable." [level=2]
+    - paragraph:
+      - link "Forms":
+        - /url: /docs/forms
+        - code: Forms
+      - text: connect the interface to a real task. Start with
+      - strong: A Label, a Value and a Clear Next Action
+      - text: . Native
+      - button "required"
+      - text: and
+      - code: type="email"
+      - text: constraints are a useful first layer; useful errors and predictable submission complete the journey.
+    - paragraph:
+      - text: As rules grow, add a reusable schema. The
+      - link "Formisch Guide":
+        - /url: /docs/formisch/installation
+      - text: connects
+      - link "valibot":
+        - /url: https://valibot.dev/
+        - code: valibot
+      - text: schemas to field values, validation and submission while Kamod supplies the controls.
+    - paragraph:
+      - text: Keep
+      - strong: Field Validation
+      - text: distinct from
+      - strong: Service Feedback
+      - text: . Preserve entered values when a save fails and give people a way to try again. Learn more about
+      - link "Submission and Recovery":
+        - /url: /docs/forms#form-submission
+      - text: .
+    - link "Build a Better Form":
+      - /url: /docs/forms
+    - text: Native Form Example
+    - code: Input + Label
+    - heading "Start with One Field" [level=3]
+    - paragraph: Try an invalid address, correct it, then submit. The browser checks the field before the local success message appears.
+    - form "Email form demo":
+      - text: Email address
+      - textbox "Email address":
+        - /placeholder: you@example.com
+      - paragraph: Try a sample address. This demo sends and saves nothing.
+      - button "Check form"
+      - button "Reset"
+      - status: Ready to check your input.
+    - paragraph:
+      - text: Ready for shared rules?
+      - link "Connect a Schema":
+        - /url: /docs/formisch/installation#schema-and-setup
+  - region "The Details That Make It Fit Together.":
+    - paragraph: 05 Practical References
+    - heading "The Details That Make It Fit Together." [level=2]
+    - paragraph:
+      - text: The special guides explain decisions shared by every component and block. Read them when you reach that step, then return to your feature with a clearer model of
+      - strong: Setup, Composition and Appearance
+      - text: .
+    - link "Follow the Complete Guide":
+      - /url: /docs/getting-started
+    - article:
+      - text: Set Up
+      - heading "Install & Connect CSS" [level=3]:
+        - link "Install & Connect CSS":
+          - /url: /docs/theming/css-setup
+      - paragraph: Load the shared stylesheet and make Tailwind source detection explicit. Check one styled component before building the rest of the screen.
+    - article:
+      - text: Theme
+      - heading "Choose Tokens & Presets" [level=3]:
+        - link "Choose Tokens & Presets":
+          - /url: /docs/theming/token-overrides
+      - paragraph: Pair backgrounds with foregrounds, refine your theme centrally, and keep the same interface readable in light and dark mode.
+    - article:
+      - text: Refine
+      - heading "Compose Component Styles" [level=3]:
+        - link "Compose Component Styles":
+          - /url: /blocks/styles
+      - paragraph: Choose a clear hierarchy of actions, consistent spacing and useful surfaces. Change the composition before adding one-off overrides.
+    - article:
+      - text: Compose
+      - heading "Combine Classes with cn" [level=3]:
+        - link "Combine Classes with cn":
+          - /url: /docs/cn/installation
+          - text: Combine Classes with
+          - code: cn
+      - paragraph: Combine base styles, conditional state and consumer overrides. Learn how clsx and tailwind-merge work together in the utility.
+    - article:
+      - text: Integrate
+      - heading "Bring a Block into Your App" [level=3]:
+        - link "Bring a Block into Your App":
+          - /url: /blocks/getting-started
+      - paragraph: Read the full file tree, copy supporting files, and replace example navigation and data with your application's own boundaries.
+    - article:
+      - text: Connect
+      - heading "Theme a Complete Layout" [level=3]:
+        - link "Theme a Complete Layout":
+          - /url: /blocks/theming
+      - paragraph: Carry the same tokens into sidebars, overlays and copied source. Check the finished screen rather than an isolated component.
+    - complementary "Read the Example. Check the API.":
+      - heading "Read the Example. Check the API." [level=3]
+      - paragraph:
+        - text: Examples show the
+        - strong: composition
+        - text: ; the API explains supported
+        - strong: props and events
+        - text: . Read them side by side when connecting your own data, and check package versions if something differs.
+      - navigation "Example and API reading links":
+        - link "Button Example":
+          - /url: /docs/button/installation#component-preview
+        - link "Button API":
+          - /url: /docs/button/installation#api-reference
+        - link "Versions & Peers":
+          - /url: /docs/packages#package-installation
+  - region "A Focused Tool for the Next Responsibility.":
+    - paragraph: 06 The Kamod Ecosystem
+    - heading "A Focused Tool for the Next Responsibility." [level=2]
+    - paragraph:
+      - text: Keep the UI at the center and add the capabilities your feature needs. These companion projects cover
+      - strong: Behavior, State, Language and Visual Communication
+      - text: . Each has its own source and documentation; you do not need to install the entire stack.
+    - link "Explore the Package Guides":
+      - /url: /docs/packages
+    - article:
+      - heading "Icons" [level=3]:
+        - link "Icons":
+          - /url: https://github.com/kamod-ch/kamod-icons
+      - link "@kamod-ch/icons":
+        - /url: https://github.com/kamod-ch/kamod-icons/tree/main/packages/core
+        - code: "@kamod-ch/icons"
+      - paragraph: Typed SVG components. Keep a consistent icon family and let color follow the surrounding interface.
+      - link "Read the Guide":
+        - /url: /docs/icons-package/installation
+    - article:
+      - heading "Hooks" [level=3]:
+        - link "Hooks":
+          - /url: https://github.com/kamod-ch/kamod-hooks
+      - link "@kamod-ch/hooks":
+        - /url: https://github.com/kamod-ch/kamod-hooks/tree/main/packages/core
+        - code: "@kamod-ch/hooks"
+      - paragraph: "Reusable behavior for Preact: state helpers, browser interactions and lifecycle work close to its owner."
+      - link "Read the Guide":
+        - /url: /docs/hooks-package/installation
+    - article:
+      - heading "Signals" [level=3]:
+        - link "Signals":
+          - /url: https://github.com/kamod-ch/kamod-signals
+      - link "@kamod-ch/signals":
+        - /url: https://github.com/kamod-ch/kamod-signals/tree/main/packages/core
+        - code: "@kamod-ch/signals"
+      - paragraph: Persist small reactive values with explicit defaults and storage choices. Useful for preferences across visits.
+      - link "Read the Guide":
+        - /url: /docs/signals-package/installation
+    - article:
+      - heading "State" [level=3]:
+        - link "State":
+          - /url: https://github.com/kamod-ch/kamod-state
+      - link "@kamod-ch/state":
+        - /url: https://github.com/kamod-ch/kamod-state/tree/main/packages/core
+        - code: "@kamod-ch/state"
+      - paragraph: Typed actions and reducers for shared domain state. Make transitions explicit as a feature grows.
+      - link "Read the Guide":
+        - /url: /docs/state-package/installation
+    - article:
+      - heading "i18n" [level=3]:
+        - link "i18n":
+          - /url: https://github.com/kamod-ch/kamod-i18n
+      - link "@kamod-ch/i18n":
+        - /url: https://github.com/kamod-ch/kamod-i18n/tree/main/packages/core
+        - code: "@kamod-ch/i18n"
+      - paragraph: Typed messages and locale-aware formatting, with a Preact adapter for translated interfaces.
+      - link "Read the Guide":
+        - /url: /docs/i18n-package/installation
+    - article:
+      - heading "Motion" [level=3]:
+        - link "Motion":
+          - /url: https://github.com/kamod-ch/kamod-motion
+      - link "@kamod-ch/motion":
+        - /url: https://github.com/kamod-ch/kamod-motion/tree/main/packages/core
+        - code: "@kamod-ch/motion"
+      - paragraph: Animation tools for Preact. Introduce movement where it clarifies an interaction and respect reduced-motion preferences.
+      - link "Explore the Repository":
+        - /url: https://github.com/kamod-ch/kamod-motion
+    - article:
+      - heading "Charts" [level=3]:
+        - link "Charts":
+          - /url: https://github.com/kamod-ch/kamod-charts
+      - link "@kamod-ch/charts":
+        - /url: https://github.com/kamod-ch/kamod-charts/tree/main/packages/core
+        - code: "@kamod-ch/charts"
+      - paragraph: Data visualization for Preact. Explore the dedicated repository for chart APIs, examples and setup.
+      - link "Explore the Repository":
+        - /url: https://github.com/kamod-ch/kamod-charts
+    - article:
+      - heading "PreactPress" [level=3]:
+        - link "PreactPress":
+          - /url: https://github.com/kamod-ch/preactpress
+      - link "@kamod-ch/preactpress":
+        - /url: https://github.com/kamod-ch/preactpress
+        - code: "@kamod-ch/preactpress"
+      - paragraph: Documentation sites built with Preact—the publishing foundation behind the guide you are reading.
+      - link "Explore the Repository":
+        - /url: https://github.com/kamod-ch/preactpress
+    - paragraph:
+      - text: For the interface itself,
+      - link "@kamod-ch/ui":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/core
+        - code: "@kamod-ch/ui"
+      - text: and
+      - link "@kamod-ch/themes":
+        - /url: https://github.com/kamod-ch/kamod-ui/tree/main/packages/themes
+        - code: "@kamod-ch/themes"
+      - text: provide the core components and theme foundation. Before sharing state or persisting a value, read about
+      - link "Package Responsibilities":
+        - /url: /docs/packages#package-boundaries
+      - text: and
+      - link "The Server and First Render":
+        - /url: /docs/packages#package-ssr
+      - text: . Find more projects in
+      - link "All Kamod Repositories":
+        - /url: https://github.com/orgs/kamod-ch/repositories
+      - text: .
+    - paragraph:
+      - strong: Start with one responsibility and one clear owner.
+      - text: Keep temporary input close to its component, persist only the preferences that should survive a visit, and introduce shared state when multiple parts of your feature need it. The
+      - link "Getting Started package examples":
+        - /url: /docs/getting-started#packages
+      - text: show these choices in small, working compositions. Before adding a dependency, check its
+      - link "Versions and Peer Dependencies":
+        - /url: /docs/packages#package-installation
+      - text: ", then verify the behavior in your own application—including keyboard use, light and dark themes, and the first server-rendered page."
+  - region "One Useful Screen. A Foundation You Understand.":
+    - paragraph: 07 Your Next Step
+    - heading "One Useful Screen. A Foundation You Understand." [level=2]
+    - paragraph:
+      - text: "You have the map:"
+      - strong:
+        - link "Components":
+          - /url: /docs/components
+          - code: Components
+        - text: for the Interaction,
+        - link "Blocks":
+          - /url: /blocks
+          - code: Blocks
+        - text: for the Layout,
+        - link "Forms":
+          - /url: /docs/forms
+          - code: Forms
+        - text: for the Task and
+        - link "Packages":
+          - /url: /docs/packages
+          - code: Packages
+        - text: for the Supporting Behavior
+      - text: . Bring them together one decision at a time.
+    - paragraph:
+      - text: The
+      - link "Getting Started":
+        - /url: /docs/getting-started
+        - code: Getting Started
+      - text: guide takes you from installing the foundation to your first working screen, then through integration and delivery. Keep it nearby while you build.
+    - link "Open the Getting Started Guide":
+      - /url: /docs/getting-started
+    - list:
+      - listitem:
+        - text: "01"
+        - heading "Make One Thing Work" [level=3]
+        - paragraph: Load the styles, render a control and connect a local interaction.
+        - link "Your First Working Screen":
+          - /url: /docs/getting-started#your-first-working-screen
+      - listitem:
+        - text: "02"
+        - heading "Build the Complete Journey" [level=3]
+        - paragraph: Add navigation, useful feedback and recovery around the happy path.
+        - link "Ship a Complete Feature":
+          - /url: /docs/getting-started#ship-a-complete-feature
+      - listitem:
+        - text: "03"
+        - heading "Check What People Will Use" [level=3]
+        - paragraph: Review keyboard access, narrow layouts, both color schemes and failure states.
+        - link "Verify the Whole Journey":
+          - /url: /docs/getting-started#verify-the-whole-journey
+- contentinfo:
+  - link "Kamod UI home":
+    - /url: /
+  - paragraph: Thoughtful interfaces start with clear foundations. Components, complete layouts and the documentation to make them your own.
+  - link "Start Building":
+    - /url: /docs/getting-started
+  - navigation "Learn & Build":
+    - heading "Learn & Build" [level=2]
+    - list:
+      - listitem:
+        - link "Getting Started":
+          - /url: /docs/getting-started
+      - listitem:
+        - link "Component Library":
+          - /url: /docs/components
+      - listitem:
+        - link "Block Collections":
+          - /url: /blocks
+      - listitem:
+        - link "Forms & Validation":
+          - /url: /docs/forms
+      - listitem:
+        - link "Companion Packages":
+          - /url: /docs/packages
+  - navigation "Practical Guides":
+    - heading "Practical Guides" [level=2]
+    - list:
+      - listitem:
+        - link "CSS Setup":
+          - /url: /docs/theming/css-setup
+      - listitem:
+        - link "Theme Tokens":
+          - /url: /docs/theming/token-overrides
+      - listitem:
+        - link "Component Styles":
+          - /url: /blocks/styles
+      - listitem:
+        - link "cn Utility":
+          - /url: /docs/cn/installation
+          - code: cn
+          - text: Utility
+      - listitem:
+        - link "Formisch Integration":
+          - /url: /docs/formisch/installation
+  - navigation "Source & Resources":
+    - heading "Source & Resources" [level=2]
+    - list:
+      - listitem:
+        - link "UI Repository":
+          - /url: https://github.com/kamod-ch/kamod-ui
+      - listitem:
+        - link "Report an Issue":
+          - /url: https://github.com/kamod-ch/kamod-ui/issues
+      - listitem:
+        - link "Releases":
+          - /url: https://github.com/kamod-ch/kamod-ui/releases
+      - listitem:
+        - link "License":
+          - /url: https://github.com/kamod-ch/kamod-ui/blob/main/LICENSE
+      - listitem:
+        - link "All Kamod Repositories":
+          - /url: https://github.com/orgs/kamod-ch/repositories
+  - paragraph:
+    - text: © 2026
+    - link "Klaus Zahiragic · Kamod":
+      - /url: https://www.kamod.ch
+  - paragraph:
+    - text: Built with
+    - link "PreactPress":
+      - /url: https://github.com/kamod-ch/preactpress
+    - link "One Shared Theme":
+      - /url: /docs/theming/installation
+  - link "Back to Top ↑":
+    - /url: "#home-title"
+```
+
+# Test source
+
+```ts
+  1  | import { expect, test } from "@playwright/test";
+  2  | 
+  3  | const ROUTES = [
+  4  |   "/",
+  5  |   "/getting-started/",
+  6  |   "/mini-vs-hybrid",
+  7  |   "/motion",
+  8  |   "/presence",
+  9  |   "/hooks/use-animate",
+  10 |   "/hooks/use-reduced-motion",
+  11 |   "/presets",
+  12 |   "/values",
+  13 |   "/svg",
+  14 |   "/ssr",
+  15 |   "/accessibility",
+  16 |   "/playground/",
+  17 |   "/bundle-sizes",
+  18 | ] as const;
+  19 | 
+  20 | for (const route of ROUTES) {
+  21 |   test(`smoke: ${route} loads`, async ({ page }) => {
+  22 |     await page.goto(route);
+  23 |     await expect(page.locator("h1").first()).toBeVisible();
+> 24 |     await expect(page.locator("#content")).toBeVisible();
+     |                                            ^ Error: expect(locator).toBeVisible() failed
+  25 |   });
+  26 | }
+  27 | 
+  28 | test("motion page demo toggles panel", async ({ page }) => {
+  29 |   await page.goto("/motion");
+  30 |   const toggle = page.getByRole("button", { name: /Hide panel|Show panel/ });
+  31 |   await expect(toggle).toBeVisible();
+  32 |   await toggle.click();
+  33 |   await expect(page.getByText("Fade + scale")).toBeHidden();
+  34 |   await toggle.click();
+  35 |   await expect(page.getByText("Fade + scale")).toBeVisible();
+  36 | });
+  37 | 
+  38 | test("playground switches demos", async ({ page }) => {
+  39 |   await page.goto("/playground/");
+  40 |   await expect(page.getByRole("heading", { name: "Playground" })).toBeVisible();
+  41 |   await page.getByRole("button", { name: "SVG path" }).click();
+  42 |   await expect(page.locator("[data-testid='svg-path']")).toBeVisible();
+  43 | });
+  44 | 
+  45 | test("presence quick reopen keeps toast mounted", async ({ page }) => {
+  46 |   await page.goto("/presence");
+  47 |   const toast = page.getByRole("status");
+  48 |   await expect(toast).toBeVisible();
+  49 |   await page.getByTestId("presence-quick-reopen").click();
+  50 |   await expect(toast).toBeVisible();
+  51 | });
+  52 | 
+```

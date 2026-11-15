@@ -1,15 +1,23 @@
 import { createElement } from "preact";
-import { forwardRef } from "preact/compat";
 import type { ComponentChildren, CSSProperties, JSX, Ref } from "preact";
-import { useLayoutEffect, useRef } from "preact/hooks";
+import { useLayoutEffect, useRef, useState } from "preact/hooks";
 import { useReducedMotion } from "../hooks/use-reduced-motion.js";
 import { finishAnimation, runMiniAnimation } from "../mini/animate-element.js";
 import { usePresence } from "../presence/context.js";
+import type { Preset } from "../presets/index.js";
 import type { KamodKeyframes, KamodTransition, ReducedMotionPolicy } from "../types.js";
 import { isMotionElement, type MotionElement } from "./supported-elements.js";
-import { keyframesToInlineStyle, mergeRefs } from "./utils.js";
+import { keyframesToInlineStyle, mergeRefs, playbackKeyFor } from "./utils.js";
 
 type MotionOwnProps = {
+  /** Preset bundle. Explicit `initial` / `animate` / `exit` / `transition` override it. */
+  preset?: Preset;
+  /**
+   * Opacity-only (or other) fallback used while reduced motion is active.
+   * Spreading a preset such as `{...slideUp}` sets this from `preset.reduced`.
+   * Not forwarded to the DOM.
+   */
+  reduced?: Preset;
   initial?: KamodKeyframes | false;
   animate?: KamodKeyframes | false;
   exit?: KamodKeyframes | false;
@@ -31,27 +39,115 @@ interface MotionComponent {
   (props: MotionProps<"div"> & { ref?: Ref<HTMLElement | SVGElement | null> }): JSX.Element;
 }
 
-function MotionInner<T extends MotionElement = "div">(
-  {
+interface ResolvedMotion {
+  initial: KamodKeyframes | false;
+  animate: KamodKeyframes | false;
+  exit: KamodKeyframes | false;
+  transition?: KamodTransition;
+}
+
+function resolveMotionTarget(
+  prefersReduced: boolean,
+  preset: Preset | undefined,
+  reduced: Preset | undefined,
+  initial: KamodKeyframes | false | undefined,
+  animate: KamodKeyframes | false | undefined,
+  exit: KamodKeyframes | false | undefined,
+  transition: KamodTransition | undefined,
+): ResolvedMotion {
+  const fallback = prefersReduced ? (reduced ?? preset?.reduced) : undefined;
+  if (fallback) {
+    return {
+      initial: fallback.initial ?? false,
+      animate: fallback.animate,
+      exit: fallback.exit ?? false,
+      transition: fallback.transition,
+    };
+  }
+
+  return {
+    initial: initial ?? preset?.initial ?? false,
+    animate: animate ?? preset?.animate ?? false,
+    exit: exit ?? preset?.exit ?? false,
+    transition: transition ?? preset?.transition,
+  };
+}
+
+function paintKeyframes(
+  clientReady: boolean,
+  prefersReduced: boolean,
+  phase: string,
+  motion: ResolvedMotion,
+): KamodKeyframes | false {
+  if (prefersReduced) {
+    if (phase === "exiting" && motion.exit) {
+      return motion.exit;
+    }
+    return motion.animate;
+  }
+
+  if (!clientReady) {
+    if (motion.initial === false) {
+      return motion.animate;
+    }
+    return motion.initial;
+  }
+
+  return false;
+}
+
+function MotionInner<T extends MotionElement = "div">(props: MotionProps<T>): JSX.Element {
+  const {
     as = "div" as T,
-    initial = false,
-    animate = false,
-    exit = false,
-    transition,
+    preset,
+    reduced,
+    initial: initialProp,
+    animate: animateProp,
+    exit: exitProp,
+    transition: transitionProp,
     reducedMotion,
     children,
     style,
+    ref,
     ...rest
-  }: MotionProps<T>,
-  ref: Ref<HTMLElement | SVGElement | null>,
-) {
+  } = props;
+
   const hostTag = isMotionElement(as) ? as : "div";
-  const elementRef = useRef<HTMLElement | null>(null);
+  const elementRef = useRef<HTMLElement | SVGElement | null>(null);
   const controlsRef = useRef<ReturnType<typeof runMiniAnimation> | null>(null);
   const registeredExitRef = useRef<(() => void) | null>(null);
   const presence = usePresence();
   const prefersReduced = useReducedMotion({ policy: reducedMotion });
   const phase = presence?.phase ?? "present";
+  const [clientReady, setClientReady] = useState(false);
+
+  const motion = resolveMotionTarget(
+    prefersReduced,
+    preset,
+    reduced,
+    initialProp,
+    animateProp,
+    exitProp,
+    transitionProp,
+  );
+
+  const presenceRef = useRef(presence);
+  const phaseRef = useRef(phase);
+  const motionRef = useRef(motion);
+  const prefersReducedRef = useRef(prefersReduced);
+  presenceRef.current = presence;
+  phaseRef.current = phase;
+  motionRef.current = motion;
+  prefersReducedRef.current = prefersReduced;
+
+  const playbackKey = playbackKeyFor({
+    tag: hostTag,
+    phase,
+    animate: motion.animate,
+    exit: motion.exit,
+    transition: motion.transition,
+    prefersReduced,
+  });
 
   useLayoutEffect(() => {
     registeredExitRef.current?.();
@@ -78,7 +174,7 @@ function MotionInner<T extends MotionElement = "div">(
       }
     };
 
-    const run = async (keyframes: KamodKeyframes | false, onDone?: () => void) => {
+    const run = (keyframes: KamodKeyframes | false, onDone?: () => void) => {
       stopCurrent();
 
       if (!keyframes) {
@@ -86,79 +182,55 @@ function MotionInner<T extends MotionElement = "div">(
         return;
       }
 
-      controlsRef.current = runMiniAnimation(element, keyframes, transition, {
-        reducedMotion: prefersReduced,
+      const controls = runMiniAnimation(element, keyframes, motionRef.current.transition, {
+        reducedMotion: prefersReducedRef.current,
       });
+      controlsRef.current = controls;
 
-      const activeControls = controlsRef.current;
-      await finishAnimation(activeControls);
-      if (!cancelled) {
-        onDone?.();
-      }
+      void finishAnimation(controls).then(() => {
+        if (!cancelled) {
+          onDone?.();
+        }
+      });
     };
 
-    if (phase === "exiting") {
-      if (!exit) {
-        presence?.safeToRemove();
-        return () => {
-          cancelled = true;
-          stopCurrent();
-        };
-      }
+    const currentPhase = phaseRef.current;
+    const currentMotion = motionRef.current;
 
-      void run(exit, () => {
-        presence?.safeToRemove();
+    if (currentPhase === "exiting") {
+      run(currentMotion.exit, () => {
+        presenceRef.current?.safeToRemove();
       });
-      return () => {
-        cancelled = true;
-        stopCurrent();
-      };
-    }
-
-    if (phase === "entering") {
-      if (!animate) {
-        presence?.notifyEnterComplete();
-        return () => {
-          cancelled = true;
-          stopCurrent();
-        };
-      }
-
-      void run(animate, () => {
-        presence?.notifyEnterComplete();
+    } else if (currentPhase === "entering") {
+      run(currentMotion.animate, () => {
+        presenceRef.current?.notifyEnterComplete();
       });
-      return () => {
-        cancelled = true;
-        stopCurrent();
-      };
+    } else if (currentPhase === "present" && currentMotion.animate) {
+      run(currentMotion.animate);
     }
 
-    if (phase === "present" && animate) {
-      void run(animate);
-      return () => {
-        cancelled = true;
-        stopCurrent();
-      };
-    }
+    setClientReady(true);
 
     return () => {
       cancelled = true;
       stopCurrent();
     };
-  }, [phase, animate, exit, transition, prefersReduced, presence]);
+  }, [playbackKey]);
 
-  const initialStyle = keyframesToInlineStyle(initial);
-  const mergedStyle = { ...initialStyle, ...(style as Record<string, string> | undefined) };
+  const painted = keyframesToInlineStyle(
+    paintKeyframes(clientReady, prefersReduced, phase, motion),
+  );
+  const mergedStyle = { ...painted, ...(style as Record<string, string> | undefined) };
 
   return createElement(
     hostTag,
     {
       ...rest,
-      ref: mergeRefs(elementRef, ref as never),
+      ref: mergeRefs(elementRef, ref),
       style: Object.keys(mergedStyle).length > 0 ? mergedStyle : style,
     },
     children,
   );
 }
 
-export const Motion = forwardRef(MotionInner) as unknown as MotionComponent;
+export const Motion = MotionInner as unknown as MotionComponent;

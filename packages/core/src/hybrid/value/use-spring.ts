@@ -1,34 +1,31 @@
 import { useLayoutEffect, useRef } from "preact/hooks";
-import { followValue, motionValue, type MotionValue, type SpringOptions } from "motion";
+import { attachFollow, motionValue, type MotionValue, type SpringOptions } from "motion";
 import { isBrowser } from "../../utils/env.js";
 
 /**
- * Returns a derived `MotionValue` that follows `source` with a spring transition.
- * Requires the hybrid engine (`motion` full bundle).
+ * Returns a stable `MotionValue` that follows `source` with a spring transition.
+ * The follow subscription starts in an effect, so a discarded render does not leak one.
  */
 export function useSpring(
   source: MotionValue<number>,
   config?: SpringOptions,
 ): MotionValue<number> {
-  const followerRef = useRef<MotionValue<number> | null>(null);
+  const valueRef = useRef<MotionValue<number> | null>(null);
 
-  if (!followerRef.current) {
-    followerRef.current = isBrowser()
-      ? followValue(source, { type: "spring", ...config })
-      : motionValue(source.get());
+  if (!valueRef.current) {
+    valueRef.current = motionValue(source.get());
   }
 
   useLayoutEffect(() => {
-    if (!isBrowser()) {
+    const value = valueRef.current;
+    if (!value || !isBrowser()) {
       return;
     }
 
-    followerRef.current?.stop();
-    followerRef.current = followValue(source, { type: "spring", ...config });
-
-    return () => {
-      followerRef.current?.stop();
-    };
+    return attachFollow(value, source, {
+      ...config,
+      type: "spring",
+    });
   }, [
     source,
     config?.stiffness,
@@ -36,7 +33,10 @@ export function useSpring(
     config?.mass,
     config?.restDelta,
     config?.restSpeed,
+    config?.duration,
+    config?.visualDuration,
+    config?.velocity,
   ]);
 
-  return followerRef.current;
+  return valueRef.current;
 }

@@ -36,6 +36,10 @@ export function Presence({
   const registeredNodes = useRef(0);
   const completedEnterNodes = useRef(0);
   const completedExitNodes = useRef(0);
+  const phaseRef = useRef(phase);
+  const onExitCompleteRef = useRef(onExitComplete);
+  phaseRef.current = phase;
+  onExitCompleteRef.current = onExitComplete;
 
   const resetExitTracking = useCallback(() => {
     exitCompleteCalled.current = false;
@@ -87,10 +91,10 @@ export function Presence({
       setVisible(false);
       if (!exitCompleteCalled.current) {
         exitCompleteCalled.current = true;
-        onExitComplete?.();
+        onExitCompleteRef.current?.();
       }
     }
-  }, [phase, prefersReduced, onExitComplete]);
+  }, [phase, prefersReduced]);
 
   const register = useCallback(() => {
     registeredNodes.current += 1;
@@ -100,7 +104,7 @@ export function Presence({
   }, []);
 
   const notifyEnterComplete = useCallback(() => {
-    if (phase !== "entering") {
+    if (phaseRef.current !== "entering") {
       return;
     }
 
@@ -108,10 +112,10 @@ export function Presence({
     if (registeredNodes.current === 0 || completedEnterNodes.current >= registeredNodes.current) {
       setPhase("present");
     }
-  }, [phase]);
+  }, []);
 
   const safeToRemove = useCallback(() => {
-    if (phase !== "exiting") {
+    if (phaseRef.current !== "exiting") {
       return;
     }
 
@@ -121,10 +125,10 @@ export function Presence({
       setVisible(false);
       if (!exitCompleteCalled.current) {
         exitCompleteCalled.current = true;
-        onExitComplete?.();
+        onExitCompleteRef.current?.();
       }
     }
-  }, [phase, onExitComplete]);
+  }, []);
 
   useLayoutEffect(() => {
     if (phase !== "entering" || prefersReduced) {

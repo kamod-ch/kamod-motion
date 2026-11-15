@@ -1,7 +1,7 @@
 import { animate as animateMini } from "motion/mini";
 import { createNoopControls } from "./noop-controls.js";
 import type { KamodAnimationControls, KamodKeyframes, KamodTransition } from "../types.js";
-import { isBrowser } from "../utils/env.js";
+import { isBrowser, isDevRuntime } from "../utils/env.js";
 
 export interface RunMiniAnimationOptions {
   reducedMotion?: boolean;
@@ -25,7 +25,10 @@ export function runMiniAnimation(
   try {
     const controls = animateMini(element, keyframes, resolvedTransition);
     return controls ?? createNoopControls();
-  } catch {
+  } catch (error) {
+    if (isDevRuntime()) {
+      throw error;
+    }
     return createNoopControls();
   }
 }

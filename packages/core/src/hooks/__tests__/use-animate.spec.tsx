@@ -60,6 +60,14 @@ function AnimateHost({
   );
 }
 
+function ReducedHost() {
+  const api = useAnimate({ reducedMotion: "always" });
+  useEffect(() => {
+    api.animate({ opacity: 1 });
+  }, [api]);
+  return <div ref={api.ref as { current: HTMLDivElement | null }} />;
+}
+
 function UnscopedHost() {
   const { animate } = useAnimate();
   useEffect(() => {
@@ -141,6 +149,19 @@ describe("useAnimate", () => {
     expect(first.stop).toHaveBeenCalledTimes(1);
     expect(second.stop).not.toHaveBeenCalled();
     expect(animateMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("passes skipAnimations when reduced motion is forced", async () => {
+    createControls();
+
+    render(<ReducedHost />);
+
+    await waitFor(() => {
+      expect(animateMock).toHaveBeenCalled();
+    });
+
+    const [, , options] = animateMock.mock.calls.at(-1) ?? [];
+    expect(options).toMatchObject({ skipAnimations: true, duration: 0, delay: 0 });
   });
 
   it("cleans up active animations on unmount", async () => {

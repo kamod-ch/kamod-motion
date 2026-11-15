@@ -1,12 +1,19 @@
 import { useCallback, useLayoutEffect, useRef } from "preact/hooks";
-import { animate as animateMini } from "motion/mini";
+import { useReducedMotion } from "./use-reduced-motion.js";
+import { runMiniAnimation } from "../mini/animate-element.js";
 import { createNoopControls } from "../mini/noop-controls.js";
-import type { KamodAnimationControls, KamodKeyframes, KamodTransition } from "../types.js";
+import type {
+  KamodAnimationControls,
+  KamodKeyframes,
+  KamodTransition,
+  ReducedMotionPolicy,
+} from "../types.js";
 import { isBrowser } from "../utils/env.js";
 
 export interface UseAnimateOptions {
   /** @default "stop" */
   onConflict?: "stop" | "none";
+  reducedMotion?: ReducedMotionPolicy;
 }
 
 export interface UseAnimateResult<T extends HTMLElement | SVGElement = HTMLElement> {
@@ -18,6 +25,7 @@ export function useAnimate<T extends HTMLElement | SVGElement = HTMLElement>(
   options?: UseAnimateOptions,
 ): UseAnimateResult<T> {
   const onConflict = options?.onConflict ?? "stop";
+  const prefersReduced = useReducedMotion({ policy: options?.reducedMotion });
   const ref = useRef<T | null>(null);
   const activeControls = useRef<KamodAnimationControls | null>(null);
 
@@ -37,7 +45,9 @@ export function useAnimate<T extends HTMLElement | SVGElement = HTMLElement>(
         activeControls.current = null;
       }
 
-      const controls = animateMini(element, keyframes, transition);
+      const controls = runMiniAnimation(element, keyframes, transition, {
+        reducedMotion: prefersReduced,
+      });
       activeControls.current = controls;
 
       void controls.finished.finally(() => {
@@ -48,7 +58,7 @@ export function useAnimate<T extends HTMLElement | SVGElement = HTMLElement>(
 
       return controls;
     },
-    [onConflict],
+    [onConflict, prefersReduced],
   );
 
   useLayoutEffect(() => {

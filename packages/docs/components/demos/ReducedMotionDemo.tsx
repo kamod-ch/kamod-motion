@@ -41,9 +41,7 @@ export function ReducedMotionDemo(): JSX.Element {
       </p>
       <Motion
         class="flex h-28 w-full items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 text-sm"
-        initial={slideUp.initial}
-        animate={slideUp.animate}
-        transition={slideUp.transition}
+        preset={slideUp}
         reducedMotion={policy}
         data-testid="reduced-motion-panel"
       >
@@ -60,11 +58,6 @@ import { slideUp } from "@kamod-ch/motion/presets";
 const [policy, setPolicy] = useState<"user" | "always" | "never">("user");
 const reduced = useReducedMotion({ policy });
 
-<Motion
-  initial={slideUp.initial}
-  animate={slideUp.animate}
-  transition={slideUp.transition}
-  reducedMotion={policy}
->
+<Motion preset={slideUp} reducedMotion={policy}>
   {reduced ? "Spatial motion skipped" : "Full slide-up animation"}
 </Motion>`;

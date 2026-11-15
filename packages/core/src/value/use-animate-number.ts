@@ -20,35 +20,41 @@ export interface UseAnimateNumberOptions {
  */
 export function useAnimateNumber(target: number, options?: UseAnimateNumberOptions): number {
   const prefersReduced = useReducedMotion({ policy: options?.reducedMotion });
-  const mounted = useRef(true);
+  const generation = useRef(0);
   const currentRef = useRef(options?.from ?? target);
+  const velocityRef = useRef(0);
   const [displayValue, setDisplayValue] = useState(currentRef.current);
+  const spring = options?.spring;
+  const ease = options?.ease;
 
   useLayoutEffect(() => {
-    mounted.current = true;
+    const current = ++generation.current;
 
     const controls = animateNumber({
       from: currentRef.current,
       to: target,
       duration: options?.duration,
       type: options?.type,
-      ease: options?.ease,
-      spring: options?.spring,
+      ease,
+      spring,
+      velocity: velocityRef.current,
       delay: options?.delay,
       reducedMotion: prefersReduced,
-      onUpdate: (value) => {
+      onUpdate: (value, velocity = 0) => {
         currentRef.current = value;
-        if (mounted.current) {
+        velocityRef.current = velocity;
+        if (generation.current === current) {
           setDisplayValue(value);
         }
       },
       onComplete: () => {
         currentRef.current = target;
+        velocityRef.current = 0;
       },
     });
 
     return () => {
-      mounted.current = false;
+      generation.current += 1;
       controls.stop();
     };
   }, [
@@ -58,8 +64,12 @@ export function useAnimateNumber(target: number, options?: UseAnimateNumberOptio
     options?.type,
     options?.delay,
     options?.from,
-    options?.ease,
-    options?.spring,
+    ease,
+    spring?.stiffness,
+    spring?.damping,
+    spring?.mass,
+    spring?.restDelta,
+    spring?.restSpeed,
   ]);
 
   return displayValue;

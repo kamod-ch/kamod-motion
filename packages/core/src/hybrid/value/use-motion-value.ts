@@ -11,6 +11,3 @@ export function useMotionValue<T extends number | string>(initial: T): MotionVal
 
   return valueRef.current;
 }
-
-/** @deprecated Use `useMotionValue`. Alias from ARCHITECTURE.md. */
-export const createMotionValue = motionValue;

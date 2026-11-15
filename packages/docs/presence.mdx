@@ -25,3 +25,21 @@ import { PresenceDemo, presenceDemoCode } from "./components/demos/PresenceDemo"
 ```
 
 When `prefers-reduced-motion: reduce` is active, presence skips spatial motion and completes exits immediately — see [useReducedMotion](/hooks/use-reduced-motion).
+
+## Lists
+
+`PresenceList` keeps a row mounted after its key leaves the list, until that row's `exit` finishes. `mode="sync"` enters new rows while others exit. `mode="wait"` holds new rows until every current exit has finished. Each child needs a stable `key`.
+
+```tsx
+import { Motion } from "@kamod-ch/motion/motion";
+import { PresenceList } from "@kamod-ch/motion/presence";
+import { fade } from "@kamod-ch/motion/presets";
+
+<PresenceList mode="sync">
+  {items.map((item) => (
+    <Motion key={item.id} preset={fade}>
+      {item.label}
+    </Motion>
+  ))}
+</PresenceList>;
+```

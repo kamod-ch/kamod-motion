@@ -26,4 +26,15 @@ describe("Motion SSR markup", () => {
     expect(html).toContain("Panel");
     expect(animateMock).not.toHaveBeenCalled();
   });
+
+  it("renders animate styles when initial is false", async () => {
+    const { render: renderToString } = await import("preact-render-to-string");
+    const { Motion } = await import("../motion/Motion.js");
+
+    const html = renderToString(<Motion initial={false} animate={{ opacity: 1, y: 8 }} />);
+
+    expect(html).toMatch(/opacity:\s*1/);
+    expect(html).toContain("translateY(8px)");
+    expect(animateMock).not.toHaveBeenCalled();
+  });
 });

@@ -76,4 +76,25 @@ describe("animateNumber", () => {
     expect(updates.length).toBe(beforeStop);
     await expect(controls.finished).rejects.toThrow("animation stopped");
   });
+
+  it("jumps to the target when completed", () => {
+    const updates: number[] = [];
+    let completed = false;
+
+    const controls = animateNumber({
+      from: 0,
+      to: 80,
+      duration: 2,
+      onUpdate: (value) => updates.push(value),
+      onComplete: () => {
+        completed = true;
+      },
+    });
+
+    controls.complete();
+
+    expect(updates.at(-1)).toBe(80);
+    expect(completed).toBe(true);
+    expect(controls.state).toBe("finished");
+  });
 });

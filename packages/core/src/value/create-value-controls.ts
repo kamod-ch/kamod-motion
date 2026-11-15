@@ -16,6 +16,9 @@ export function createMutableValueControls(): MutableValueControls {
     rejectFinished = () => reject(new Error("animation stopped"));
   });
 
+  // Callers may stop an animation without awaiting `finished`.
+  void finished.catch(() => {});
+
   const controls: MutableValueControls = {
     time: 0,
     speed: 1,

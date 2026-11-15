@@ -5,10 +5,10 @@ import {
   createMutableValueControls,
   createResolvedValueControls,
 } from "./create-value-controls.js";
-import type { AnimateNumberOptions } from "./types.js";
+import type { AnimateNumberOptions, SpringConfig } from "./types.js";
 
 const DEFAULT_DURATION = 0.3;
-const DEFAULT_SPRING = { stiffness: 180, damping: 24, mass: 1 };
+const DEFAULT_SPRING: SpringConfig = { stiffness: 180, damping: 24, mass: 1 };
 
 function springStep(
   current: number,
@@ -28,8 +28,16 @@ function springStep(
   return { value: nextValue, velocity: nextVelocity };
 }
 
-function isSpringSettled(current: number, target: number, velocity: number) {
-  return Math.abs(target - current) < 0.001 && Math.abs(velocity) < 0.001;
+const MAX_SPRING_SECONDS = 8;
+
+function isSpringSettled(
+  current: number,
+  target: number,
+  velocity: number,
+  restDelta: number,
+  restSpeed: number,
+) {
+  return Math.abs(target - current) <= restDelta && Math.abs(velocity) <= restSpeed;
 }
 
 /**
@@ -45,6 +53,7 @@ export function animateNumber(options: AnimateNumberOptions): KamodAnimationCont
     ease,
     spring = DEFAULT_SPRING,
     delay = 0,
+    velocity: initialVelocity = 0,
     onUpdate,
     onComplete,
     reducedMotion = false,
@@ -60,6 +69,7 @@ export function animateNumber(options: AnimateNumberOptions): KamodAnimationCont
   let frameId = 0;
   let delayTimeout: ReturnType<typeof setTimeout> | undefined;
   let cancelled = false;
+  let settled = false;
 
   const cleanup = () => {
     if (frameId) {
@@ -73,18 +83,19 @@ export function animateNumber(options: AnimateNumberOptions): KamodAnimationCont
   };
 
   const finish = () => {
-    if (cancelled) {
+    if (cancelled || settled) {
       return;
     }
 
+    settled = true;
     cleanup();
-    onUpdate(to);
+    onUpdate(to, 0);
     onComplete?.();
     controls.finish();
   };
 
   const stop = () => {
-    if (cancelled) {
+    if (cancelled || settled) {
       return;
     }
 
@@ -95,6 +106,7 @@ export function animateNumber(options: AnimateNumberOptions): KamodAnimationCont
 
   controls.stop = stop;
   controls.cancel = stop;
+  controls.complete = finish;
 
   const runTween = (startTime: number) => {
     const easing = resolveEase(ease);
@@ -108,7 +120,7 @@ export function animateNumber(options: AnimateNumberOptions): KamodAnimationCont
       const elapsed = now - startTime;
       const progress = durationMs === 0 ? 1 : Math.min(elapsed / durationMs, 1);
       const eased = easing(progress);
-      onUpdate(from + (to - from) * eased);
+      onUpdate(from + (to - from) * eased, 0);
 
       if (progress >= 1) {
         finish();
@@ -118,7 +130,7 @@ export function animateNumber(options: AnimateNumberOptions): KamodAnimationCont
       frameId = requestAnimationFrame(tick);
     };
 
-    onUpdate(from);
+    onUpdate(from, 0);
     frameId = requestAnimationFrame(tick);
   };
 
@@ -126,28 +138,35 @@ export function animateNumber(options: AnimateNumberOptions): KamodAnimationCont
     const stiffness = spring.stiffness ?? DEFAULT_SPRING.stiffness!;
     const damping = spring.damping ?? DEFAULT_SPRING.damping!;
     const mass = spring.mass ?? DEFAULT_SPRING.mass!;
+    const restDelta = spring.restDelta ?? 0.001;
+    const restSpeed = spring.restSpeed ?? 0.01;
     let current = from;
-    let velocity = 0;
+    let velocity = initialVelocity;
     let previousTime: number | undefined;
+    let elapsed = 0;
 
     const tick = (now: number) => {
-      if (cancelled) {
+      if (cancelled || settled) {
         return;
       }
 
       const delta = previousTime === undefined ? 0 : Math.min((now - previousTime) / 1000, 0.064);
       previousTime = now;
+      elapsed += delta;
 
       if (delta > 0) {
         const step = springStep(current, to, velocity, stiffness, damping, mass, delta);
         current = step.value;
         velocity = step.velocity;
-        onUpdate(current);
+        onUpdate(current, velocity);
       } else {
-        onUpdate(from);
+        onUpdate(from, velocity);
       }
 
-      if (isSpringSettled(current, to, velocity)) {
+      if (
+        isSpringSettled(current, to, velocity, restDelta, restSpeed) ||
+        elapsed >= MAX_SPRING_SECONDS
+      ) {
         finish();
         return;
       }
@@ -175,6 +194,3 @@ export function animateNumber(options: AnimateNumberOptions): KamodAnimationCont
 
   return controls;
 }
-
-/** Alias matching common Motion naming. */
-export const animateValueNumber = animateNumber;

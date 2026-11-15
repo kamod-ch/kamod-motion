@@ -7,10 +7,10 @@ description: Choose the mini WAAPI engine by default; opt into hybrid MotionValu
 
 @kamod-ch/motion ships two animation runtimes from the same `motion` peer:
 
-| Engine     | Import                                                     | Bundle (gzip, approx.) | Use when                                                |
-| ---------- | ---------------------------------------------------------- | ---------------------- | ------------------------------------------------------- |
-| **Mini**   | `@kamod-ch/motion`, `@kamod-ch/motion/mini`                | ~3.1 KB                | DOM/SVG WAAPI overlays, presets, presence               |
-| **Hybrid** | `@kamod-ch/motion/hybrid`, `@kamod-ch/motion/hybrid/value` | ~22.8 KB               | `MotionValue`, springs, stagger factory, object targets |
+| Engine     | Import                                                     | What the number measures                                                  | Use when                                                |
+| ---------- | ---------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------- |
+| **Mini**   | `@kamod-ch/motion/motion`, `@kamod-ch/motion/presence`     | Wrapper root is ~3.9 KB gzip, plus the `motion/mini` peer (~3.1 KB gzip)  | DOM/SVG WAAPI overlays, presets, presence               |
+| **Hybrid** | `@kamod-ch/motion/hybrid`, `@kamod-ch/motion/hybrid/value` | `motion` peer is ~22.8 KB gzip when you import `motionValue` or `stagger` | `MotionValue`, springs, stagger factory, object targets |
 
 The root export map **never** imports the hybrid engine, so tree-shaking stays predictable.
 
@@ -43,20 +43,24 @@ import { Motion } from "@kamod-ch/motion/motion";
 Powered by full `motion` exports — `motionValue`, `animateValue`, `stagger`, scroll helpers, and JS-driven springs.
 
 ```ts
-import { motionValue, stagger } from "@kamod-ch/motion/hybrid";
+import { hover, inView, motionValue, press, scroll, stagger } from "@kamod-ch/motion/hybrid";
 import { useSpring } from "@kamod-ch/motion/hybrid/value";
+
+const stopHover = hover(element, () => {});
+const stopScroll = scroll(() => {}, { target: element });
+const stopInView = inView(element, () => {});
 ```
 
 Import hybrid subpaths **only** in modules that need them. Never import hybrid from shared layout shells if you want to keep bundles small.
 
 ## Decision guide
 
-| Need                         | Engine                        |
-| ---------------------------- | ----------------------------- |
-| Dialog / toast enter & exit  | Mini                          |
-| Chart path reveal            | Mini (`@kamod-ch/motion/svg`) |
-| KPI counter tick             | Mini (`useAnimateNumber`)     |
-| Spring-driven drag or layout | Hybrid (future / opt-in)      |
-| `MotionValue` pipelines      | Hybrid                        |
+| Need                          | Engine                                        |
+| ----------------------------- | --------------------------------------------- |
+| Dialog / toast enter & exit   | Mini                                          |
+| Chart path reveal             | Mini (`@kamod-ch/motion/svg`)                 |
+| KPI counter tick              | Mini (`useAnimateNumber`)                     |
+| Scroll, in-view, hover, press | Hybrid (`scroll`, `inView`, `hover`, `press`) |
+| `MotionValue` pipelines       | Hybrid                                        |
 
 See [bundle sizes](/bundle-sizes) for measured entry-point costs.

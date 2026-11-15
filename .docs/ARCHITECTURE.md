@@ -129,26 +129,26 @@ Implemented in `@kamod-ch/motion` 0.2. Types reference `motion-dom` shapes via `
 
 ### `@kamod-ch/motion` (mini engine default)
 
-| Export path                  | Symbol(s)                                                     | Engine                    |
-| ---------------------------- | ------------------------------------------------------------- | ------------------------- |
-| `.`                          | Re-exports below (no hybrid symbols)                          | Mini                      |
-| `./mini`                     | `animate`, `animateSequence` + type re-exports                | Mini                      |
-| `./hooks/use-reduced-motion` | `useReducedMotion`                                            | Mini (no `motion` import) |
-| `./hooks/use-animate`        | `useAnimate`                                                  | Mini                      |
-| `./motion`                   | `Motion`                                                      | Mini                      |
-| `./presence`                 | `Presence`, `usePresence`                                     | Mini                      |
-| `./presets`                  | `fade`, `fadeIn`, `fadeOut`, `slide*`, `zoom*`, `Preset` type | Mini (static data)        |
-| `./value`                    | `animateNumber`, `useAnimateNumber`                           | Mini (rAF driver)         |
-| `./svg`                      | `animateSvg`, `useAnimateSvg`, SVG keyframe types             | Mini                      |
+| Export path                  | Symbol(s)                                           | Engine                    |
+| ---------------------------- | --------------------------------------------------- | ------------------------- |
+| `.`                          | Re-exports below (no hybrid symbols)                | Mini                      |
+| `./mini`                     | `animate`, `animateSequence` + type re-exports      | Mini                      |
+| `./hooks/use-reduced-motion` | `useReducedMotion`                                  | Mini (no `motion` import) |
+| `./hooks/use-animate`        | `useAnimate`                                        | Mini                      |
+| `./motion`                   | `Motion`                                            | Mini                      |
+| `./presence`                 | `Presence`, `PresenceList`, `usePresence`           | Mini                      |
+| `./presets`                  | `fade`, `scale`, `slide*`, `stagger`, `Preset` type | Mini (static data)        |
+| `./value`                    | `animateNumber`, `useAnimateNumber`                 | Mini (rAF driver)         |
+| `./svg`                      | `animateSvg`, `useAnimateSvg`, SVG keyframe types   | Mini                      |
 
 ### `@kamod-ch/motion/hybrid` (opt-in)
 
-| Export path | Symbol(s)                                                                          | Engine |
-| ----------- | ---------------------------------------------------------------------------------- | ------ |
-| `.`         | `motionValue`, `animateValue`, `followValue`, `stagger`, `spring`, type re-exports | Hybrid |
-| `./value`   | `animateHybridValue`, `useMotionValue`, `useSpring`, `createMotionValue`           | Hybrid |
+| Export path | Symbol(s)                                                                                                             | Engine |
+| ----------- | --------------------------------------------------------------------------------------------------------------------- | ------ |
+| `.`         | `motionValue`, `animateValue`, `followValue`, `stagger`, `spring`, `scroll`, `scrollInfo`, `inView`, `hover`, `press` | Hybrid |
+| `./value`   | `animateHybridValue`, `useMotionValue`, `useSpring`, `motionValue`                                                    | Hybrid |
 
-**Deferred beyond v0.1:** `./hybrid/scroll`, layout, gestures, path factories (`arc`), `ViewTransitionBuilder`.
+**Deferred:** layout projection, path factories (`arc`), `ViewTransitionBuilder`, SVG `d` morphing. `scroll`, `inView`, `hover`, and `press` are direct re-exports from `./hybrid`.
 
 ---
 
@@ -218,6 +218,14 @@ Implementation note: internally wraps `motion/mini` `animate` with an element sc
 ```typescript
 interface MotionProps<T extends keyof HTMLElements = "div"> {
   as?: T;
+  /** Applies `initial`, `animate`, `exit`, and `transition`. Explicit props override these. */
+  preset?: Preset;
+  /**
+   * Fallback used while reduced motion is active (usually opacity-only).
+   * Set automatically when spreading a preset that defines `reduced`.
+   * Not forwarded to the DOM.
+   */
+  reduced?: Preset;
   initial?: KamodKeyframes | false;
   animate?: KamodKeyframes | false;
   exit?: KamodKeyframes | false;
@@ -296,14 +304,11 @@ interface Preset {
 }
 
 declare const fade: Preset;
-declare const fadeIn: Preset;
-declare const fadeOut: Preset;
-declare const slideInFromTop: Preset;
-declare const slideInFromBottom: Preset;
-declare const slideInFromLeft: Preset;
-declare const slideInFromRight: Preset;
-declare const zoomIn95: Preset;
-declare const zoomOut95: Preset;
+declare const scale: Preset;
+declare const slideUp: Preset;
+declare const slideDown: Preset;
+declare const slideLeft: Preset;
+declare const slideRight: Preset;
 ```
 
 Presets map 1:1 to Kamod UI Tailwind animation utility names (`fade-in`, `zoom-in-95`, …) but emit Motion keyframes instead of CSS `@keyframes`.
@@ -374,7 +379,7 @@ function useAnimateSvg<T extends SVGElement = SVGElement>(): UseAnimateSvgResult
 ### Hybrid `./hybrid` and `./hybrid/value`
 
 ```typescript
-function createMotionValue<T extends string | number>(initial: T): MotionValue<T>;
+function motionValue<T extends string | number>(initial: T): MotionValue<T>;
 
 function useMotionValue<T extends string | number>(initial: T): MotionValue<T>;
 
@@ -403,7 +408,7 @@ Verified from `kamod-charts` RFC/docs (no code copied, no dependency added):
 | Axis/series/chart component animations        | Not in motion — charts compose primitives                  | **Deferred** |
 | LineChart/BarChart animation orchestration    | Not in motion — charts package                             | **Deferred** |
 | Data-driven `d` path morphing                 | Hybrid JS + external interpolator                          | **Deferred** |
-| Scroll-linked chart animations                | `./hybrid` `scroll`/`inView` (deferred export)             | **Deferred** |
+| Scroll-linked chart animations                | `./hybrid` `scroll` / `inView` / `scrollInfo`              | Re-exported  |
 | Staggered multi-series enter                  | `./hybrid` `stagger` + chart-local delays                  | Partial      |
 
 ---
@@ -423,7 +428,7 @@ Verified from `kamod-charts` RFC/docs (no code copied, no dependency added):
 
 1. **Module scope:** No `window`, `document`, `matchMedia`, or `animate()` at top level in any `@kamod-ch/motion` entry.
 2. **`useReducedMotion`:** Returns `false` on server; subscribes in `useEffect` on client.
-3. **`Motion` / `Presence`:** Server render = static HTML using `initial` keyframes (or `animate` if `initial: false`); **no** `animate()` calls until `useLayoutEffect` on client.
+3. **`Motion` / `Presence`:** Server render = static HTML using `initial` keyframes (or `animate` if `initial: false`); **no** `animate()` calls until `useLayoutEffect` on client. The first client render matches that markup. After the animation starts, initial inline styles are removed so they cannot pin the element to the enter state. `entering` and `present` share one playback while the keyframes are unchanged, so settling presence does not replay the enter animation. Reduced motion writes the resolved target (preset `reduced` fallback when present) inline and skips the tween.
 4. **Hydration mismatch:** First client frame applies inline styles from resolved keyframes before paint (use `useLayoutEffect`, not `useEffect`, for enter animations).
 5. **`useAnimate`:** Returns no-op controls during SSR (`animations: []` pattern, same as `motion/mini` null target).
 6. **Peer `motion` import in SSR bundles:** Allowed for type-only imports; runtime imports of `motion/mini` are safe in Node (verified).
@@ -437,6 +442,7 @@ Verified from `kamod-charts` RFC/docs (no code copied, no dependency added):
 | `useReducedMotion({ policy: "user" })`   | Reflects OS setting                                                            |
 | `useReducedMotion({ policy: "always" })` | Forces reduced                                                                 |
 | Component `reducedMotion` prop           | Overrides hook for that subtree                                                |
+| `preset.reduced` / `reduced` prop        | Replaces spatial keyframes while reduced motion is active                      |
 | `AnimationOptions.reduceMotion: true`    | Passed through to `motion/mini` (maps to `ReduceMotionOption` in `motion-dom`) |
 | `AnimationOptions.skipAnimations: true`  | Jump to end state (Motion native; use for tests)                               |
 
@@ -487,7 +493,7 @@ Measurement excludes `preact`, `motion`, and `motion/mini` (peer dependencies). 
 | ----------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------- |
 | WAAPI spring fidelity                           | Mini converts springs to eased tweens                        | Document in presets; offer hybrid `useSpring` for critical UI |
 | SVG `d` path morph                              | Not in `DOMKeyframesDefinition` as reliably WAAPI-animatable | v0.2+ hybrid                                                  |
-| `scroll` / `inView`                             | Hybrid-only, not needed for UI overlays v0.1                 | v0.2                                                          |
+| `scroll` / `inView` / `hover` / `press`         | Hybrid-only re-exports; importing them pulls the full engine | Shipped on `./hybrid`                                         |
 | Layout animations                               | Projection engine size + complexity                          | Out of scope                                                  |
 | `@kamod-ch/charts` duplicate `useReducedMotion` | Divergent behavior                                           | Charts re-exports from `@kamod-ch/motion` in v0.2             |
 | Function timeline segments                      | Hybrid-only                                                  | Document; use hybrid when needed                              |

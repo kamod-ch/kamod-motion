@@ -45,6 +45,6 @@ export function animateHybridValue<T extends number | string = number>(
   }) as KamodAnimationControls;
 }
 
-export { motionValue as createMotionValue, motionValue, animateValue } from "motion";
+export { motionValue, animateValue } from "motion";
 export { useMotionValue } from "./use-motion-value.js";
 export { useSpring } from "./use-spring.js";

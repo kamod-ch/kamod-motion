@@ -19,14 +19,20 @@ import { StaggerListDemo, staggerListDemoCode } from "./components/demos/Stagger
 
 ## Props
 
-| Prop            | Type                               | Description                      |
-| --------------- | ---------------------------------- | -------------------------------- |
-| `as`            | `"div" \| "button" \| "span" \| …` | Host element (limited set)       |
-| `initial`       | keyframes \| `false`               | Starting state                   |
-| `animate`       | keyframes \| `false`               | Target state while present       |
-| `exit`          | keyframes \| `false`               | Exit state (requires `Presence`) |
-| `transition`    | Motion transition                  | Duration, ease, delay            |
-| `reducedMotion` | `"user" \| "always" \| "never"`    | Override reduced-motion policy   |
+| Prop            | Type                                                    | Description                                             |
+| --------------- | ------------------------------------------------------- | ------------------------------------------------------- |
+| `as`            | `"div" \| "button" \| "h1" \| "dialog" \| "input" \| …` | Host element from the supported set                     |
+| `preset`        | `Preset`                                                | `initial`, `animate`, `exit`, and `transition` together |
+| `initial`       | keyframes \| `false`                                    | Starting state. Overrides `preset`                      |
+| `animate`       | keyframes \| `false`                                    | Target state while present. Overrides `preset`          |
+| `exit`          | keyframes \| `false`                                    | Exit state (requires `Presence`). Overrides `preset`    |
+| `transition`    | Motion transition                                       | Duration, ease, delay. Overrides `preset`               |
+| `reduced`       | `Preset`                                                | Fallback while reduced motion is active. Not a DOM prop |
+| `reducedMotion` | `"user" \| "always" \| "never"`                         | Override reduced-motion policy                          |
+
+`preset={slideUp}` applies that preset's `reduced` fallback (opacity only) when reduced motion is active. Spreading `{...slideUp}` does the same, because `reduced` stays on `Motion` and is not written to the DOM.
+
+Initial keyframes are inline styles for the server render and the first client frame. After the animation starts, those inline styles are removed so they do not pin the element to its enter state. `initial={false}` paints the `animate` keyframes immediately.
 
 Pair with `@kamod-ch/motion/presets` for Kamod-standard motion language.
 

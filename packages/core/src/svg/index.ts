@@ -1,4 +1,4 @@
-export { animateSvg, animateSVG, type AnimateSvgOptions } from "./animate-svg.js";
+export { animateSvg, type AnimateSvgOptions } from "./animate-svg.js";
 export {
   useAnimateSvg,
   type UseAnimateSvgOptions,

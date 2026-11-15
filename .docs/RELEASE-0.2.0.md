@@ -23,32 +23,34 @@ Peers (required):
 
 ## Breaking / migration
 
-| Consumer                                   | Change                                                                                                      |
-| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| Preact 10 apps                             | Upgrade to Preact 11. JSX types moved (`CSSProperties`, heading attributes are top-level `preact` exports). |
-| Motion 13 apps                             | Upgrade the `motion` peer to 14.x. Mini vs hybrid split is unchanged.                                       |
-| `@kamod-ch/ui-motion` / `@kamod-ch/charts` | Bump `@kamod-ch/motion` to `^0.2.0` and align `motion` to 14.x.                                             |
+| Consumer                                                           | Change                                                                                                      |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| Preact 10 apps                                                     | Upgrade to Preact 11. JSX types moved (`CSSProperties`, heading attributes are top-level `preact` exports). |
+| Motion 13 apps                                                     | Upgrade the `motion` peer to 14.x. Mini vs hybrid split is unchanged.                                       |
+| `@kamod-ch/ui-motion` / `@kamod-ch/charts`                         | Bump `@kamod-ch/motion` to `^0.2.0` and align `motion` to 14.x.                                             |
+| Preset aliases (`fadeIn`, `slideInFrom*`, `zoomIn95`, `zoomOut95`) | Use `fade`, `slideUp` / `slideDown` / `slideLeft` / `slideRight`, and `scale`.                              |
+| `animateSVG`, `animateValueNumber`, `createMotionValue`            | Use `animateSvg`, `animateNumber`, and `motionValue`.                                                       |
 
-API surface and export map are unchanged from 0.1.0.
+`Presence` still takes `show`. Lists use `PresenceList`.
 
 ## What's included
 
 ### Mini engine (default)
 
 - `animate`, `animateSequence` via `@kamod-ch/motion/mini`
-- `Motion`, `Presence`, presets, `useAnimate`, `useReducedMotion`
+- `Motion`, `Presence`, `PresenceList`, presets, `useAnimate`, `useReducedMotion`
 - `animateNumber` / `useAnimateNumber` (rAF driver, no full motion import)
 - `animateSvg` / `useAnimateSvg` (WAAPI via `motion/mini`)
 
 ### Hybrid engine (opt-in)
 
-- `@kamod-ch/motion/hybrid` — `motionValue`, `animateValue`, `followValue`, `stagger`, `spring`
+- `@kamod-ch/motion/hybrid` — `motionValue`, `animateValue`, `followValue`, `stagger`, `spring`, `scroll`, `scrollInfo`, `inView`, `hover`, `press`
 - `@kamod-ch/motion/hybrid/value` — `useMotionValue`, `useSpring`, `animateHybridValue`
 
 ### Explicitly excluded
 
 - `motion/react`, `react`, `react-dom`
-- Scroll, layout, drag/gesture wrappers
+- Layout projection and drag wrappers
 - SVG path `d` morphing
 
 ## Tooling
@@ -91,10 +93,10 @@ Command: `pnpm --filter @kamod-ch/motion size`
 | Entry    | Minified |   Gzip | Budget    |
 | -------- | -------: | -----: | --------- |
 | `mini`   |    102 B |   87 B | —         |
-| `value`  |   2.8 KB | 1.4 KB | ≤ 3 KB ✓  |
-| `svg`    |   2.7 KB | 1.2 KB | ≤ 4 KB ✓  |
-| `hybrid` |    217 B |  155 B | ≤ 20 KB ✓ |
-| root     |   6.7 KB | 2.5 KB | ≤ 8 KB ✓  |
+| `value`  |   3.0 KB | 1.5 KB | ≤ 3 KB ✓  |
+| `svg`    |   2.8 KB | 1.2 KB | ≤ 4 KB ✓  |
+| `hybrid` |    341 B |  206 B | ≤ 20 KB ✓ |
+| root     |  10.1 KB | 3.9 KB | ≤ 8 KB ✓  |
 
 `pnpm --filter @kamod-ch/motion size` now fails if gzip budgets are exceeded. Peer baseline (not counted): `motion/mini` and full `motion` stay external.
 
@@ -117,6 +119,6 @@ pnpm test:e2e
 
 ## Known limitations
 
-See README and `.docs/ARCHITECTURE.md` — still deferred: scroll/inView exports, layout animation, SVG `d` morphing, chart orchestration wrappers.
+See README and `.docs/ARCHITECTURE.md` — still deferred: layout animation, SVG `d` morphing, chart orchestration wrappers. `scroll`, `inView`, `hover`, and `press` are re-exported from `@kamod-ch/motion/hybrid`.
 
 Known peer warning: `@kamod-ch/themes@0.2.1` still declares `preact ^10` until themes is republished.

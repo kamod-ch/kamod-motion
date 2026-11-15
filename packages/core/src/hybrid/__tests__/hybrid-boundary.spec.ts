@@ -70,7 +70,10 @@ describe("hybrid import boundary", () => {
     const hybridSource = readFileSync(hybridDist, "utf8");
     expect(hybridSource).toMatch(/from ["']motion["']/);
 
-    const miniEngineChunk = readFileSync(resolve(packageRoot, "dist/chunk-JVLGJ32D.js"), "utf8");
+    const miniEngineChunk = readdirSync(resolve(packageRoot, "dist"))
+      .filter((file) => file.startsWith("chunk-") && file.endsWith(".js"))
+      .map((file) => readFileSync(resolve(packageRoot, "dist", file), "utf8"))
+      .find((source) => source.includes("motion/mini"));
     expect(miniEngineChunk).toMatch(/from ["']motion\/mini["']/);
     expect(hybridSource).not.toMatch(/from ["']motion\/mini["']/);
   });
@@ -84,6 +87,11 @@ describe("@kamod-ch/motion/hybrid exports", () => {
     expect(typeof hybrid.animateValue).toBe("function");
     expect(typeof hybrid.stagger).toBe("function");
     expect(typeof hybrid.followValue).toBe("function");
+    expect(typeof hybrid.scroll).toBe("function");
+    expect(typeof hybrid.scrollInfo).toBe("function");
+    expect(typeof hybrid.inView).toBe("function");
+    expect(typeof hybrid.hover).toBe("function");
+    expect(typeof hybrid.press).toBe("function");
   });
 });
 

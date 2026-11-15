@@ -63,7 +63,7 @@ export function animateSvg(
     }
   };
 
-  return {
+  const group: KamodAnimationControls = {
     time: 0,
     speed: 1,
     startTime: null,
@@ -83,7 +83,15 @@ export function animateSvg(
     // oxlint-disable-next-line unicorn/no-thenable
     then: (onResolve, onReject) => finished.then(onResolve, onReject),
   };
-}
 
-/** @deprecated Use `animateSvg`. Kept for ARCHITECTURE.md naming. */
-export const animateSVG = animateSvg;
+  void finished.then(
+    () => {
+      group.state = "finished";
+    },
+    () => {
+      group.state = "finished";
+    },
+  );
+
+  return group;
+}
