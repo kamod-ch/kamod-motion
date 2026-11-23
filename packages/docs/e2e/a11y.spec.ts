@@ -13,6 +13,11 @@ for (const { route, name } of KEY_PAGES) {
   test(`${name} has no blocking a11y violations`, async ({ page }) => {
     await page.goto(route);
     await expect(page.locator("h1").first()).toBeVisible();
+    // Entrance animations (opacity) would skew axe colour-contrast results.
+    await page.waitForFunction(() =>
+      document.getAnimations().every((a) => a.playState !== "running"),
+    );
+    await page.waitForTimeout(100);
     await assertNoBlockingA11yViolations(page, name, { include: "#content" });
   });
 }
